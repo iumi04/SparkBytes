@@ -16,6 +16,9 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      animation: {
+        'blurIn': 'blurIn 0.5s ease-in-out',
+      },
     },
   },
   plugins: [],
