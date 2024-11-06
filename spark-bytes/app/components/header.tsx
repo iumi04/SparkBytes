@@ -30,22 +30,22 @@ export default function Header() {
       <NavbarBrand className="ml-4 font-nunito font-semibold">Spark Bytes</NavbarBrand>
       <NavbarContent justify="end" className="flex gap-4 mr-4">
         <NavbarItem>
-          <Link href="/" className="text-current hover:text-blue-500 font-nunito font-semibold">
+          <Link href="/" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
             home
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/about" className="text-current hover:text-blue-500 font-nunito font-semibold">
+          <Link href="/about" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
             about
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/events" className="text-current hover:text-blue-500 font-nunito font-semibold">
+          <Link href="/events" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
             events
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/login" className="text-current hover:text-blue-500 font-nunito font-semibold">
+          <Link href="/login" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
             login
           </Link>
         </NavbarItem>
