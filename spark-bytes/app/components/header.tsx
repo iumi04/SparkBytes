@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/navbar";
-import { Link } from "@nextui-org/react";
+// import { Link } from "@nextui-org/react";
+import Link from 'next/link';
 import { Nunito } from 'next/font/google';
 
 const nunito = Nunito({
