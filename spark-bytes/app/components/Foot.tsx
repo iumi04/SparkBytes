@@ -16,7 +16,7 @@ function Foot() {
       <div className="w-1/4 text-center">
       <p className="text-lg font-bold">Spark!Bytes</p>
       <p><Link href="/about">About</Link></p>
-      <Link href="/developers">Developers</Link>
+      <p><Link href="/developers">Developers</Link></p>
       <button>Events</button>
       </div>
       <div className="w-1/4 text-center">
