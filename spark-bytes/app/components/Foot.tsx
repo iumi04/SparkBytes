@@ -1,5 +1,6 @@
 import React from "react";
 import { Nunito } from 'next/font/google';
+import Link from 'next/link';
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -14,9 +15,9 @@ function Foot() {
       </div>
       <div className="w-1/4 text-center">
       <p className="text-lg font-bold">Spark!Bytes</p>
-      <p>About</p>
-      <p>Developers</p>
-      <p>Events</p>
+      <p><Link href="/about">About</Link></p>
+      <Link href="/developers">Developers</Link>
+      <button>Events</button>
       </div>
       <div className="w-1/4 text-center">
       <p className="text-lg font-bold">Reach us at</p>
