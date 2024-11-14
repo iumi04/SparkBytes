@@ -11,7 +11,7 @@ const nunito = Nunito({
   weight: ['400', '700'],
 });
 
-export default function Login() {
+export default function Signup() {
   const router = useRouter();
 
   const handleHome = () => {
@@ -20,7 +20,7 @@ export default function Login() {
 
   return (
     <div className="flex flex-col min-h-screen"> {/* Flex container for vertical layout */}
-      <Link href="/" className="mt-4 font-nunito font-bold text-4xl text-center pt-10"> Spark! Bytes </Link>
+            <Link href="/" className="mt-4 font-nunito font-bold text-4xl text-center pt-10"> Spark! Bytes </Link>
       <div className="flex-grow items-center justify-center"> {/* Center the input div vertically */}
         <div className="w-[70%] mx-auto"> {/* Set custom width and center it */}
           <Input 
@@ -39,7 +39,7 @@ export default function Login() {
             color="primary" 
             className="mt-4 w-full"
           >
-            Login
+            Signup
           </Button>
           <div className="flex justify-between mt-5"> {/* Flex container for links */}
             <Link 
@@ -49,10 +49,10 @@ export default function Login() {
               Return Home
             </Link>
             <Link 
-              href="/signup" // Adjust the href as needed
+              href="/login" // Adjust the href as needed
               className="text-current hover:text-blue-400 duration-300 font-nunito"
             >
-              Don't have an account?
+              Already have an account?
             </Link>
           </div>
         </div> 
