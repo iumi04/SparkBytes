@@ -1,51 +1,108 @@
-'use client';
-import React, { useEffect, useState } from 'react';
 import Header from "../components/header";
-import Foot from '../components/Foot';
+import '../globals.css';
+import { Image } from "@nextui-org/react";
+import { Nunito } from 'next/font/google';
+import Foot from "../components/Foot";
+
+// Font import for consistency
+const nunito = Nunito({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+});
 
 export default function Developers() {
-  const [data, setData] = useState(null); 
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState(null); 
-
-
-  useEffect(() => {
-    fetch("http://localhost:5000/data") 
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then(data => {
-        setData(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error("Error fetching data:", error);
-        setError(error);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
   return (
-    <div>
+    <>
       <Header />
-      <h1>About the Authors:</h1>
-      
-      {data && data.map((author, index) => (
-        <div key={index} className="author-info">
-          <img src="download.png" className="h-[48px] object-contain" alt="Author" />
-          <p>
-            My name is {author.first_name} {author.last_name} and I am currently a {author.college_year} student at Boston University. You can reach me at {author.email}.
-          </p>
-        </div>
-      ))}
+      <div className="flex items-center justify-center min-h-screen p-8 bg-background text-foreground">
+        <div className="flex w-full max-w-4xl flex-col items-center">
+          <h1 className="text-4xl font-bold mb-8 mt-20">Meet the Developers</h1>
 
+          {/* Developers Grid */}
+          <div className="space-y-12 w-full">
+            {/* Developer 1 */}
+            <div className="flex flex-col md:flex-row items-center justify-center animate-blurIn space-x-8">
+              <Image
+                className="rounded-full object-cover w-32 h-32 mb-4 md:mb-0"
+                src="/developer1.jpg" // Replace with actual developer photo
+                alt="Developer 1"
+                width={128}
+                height={128}
+              />
+              <div className="flex flex-col text-center md:text-left">
+                <h3 className="text-xl font-semibold">Umi Imai</h3>
+                <div className="p-2 mt-2 rounded-2xl bg-gradient-to-r from-white/10 to-gray-300">
+                  <div className="text-black bg-white rounded-2xl shadow-lg backdrop-blur-md p-4">
+                    <p><b>Role:</b> Frontend Developer</p>
+                    <p><b>Bio:</b> Prashant is a third-year CS student at Boston University. He loves solving complex problems and enjoys basketball.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Developer 2 */}
+            <div className="flex flex-col md:flex-row items-center justify-center animate-blurIn space-x-8">
+              <Image
+                className="rounded-full object-cover w-32 h-32 mb-4 md:mb-0"
+                src="/developer2.jpg" // Replace with actual developer photo
+                alt="Developer 2"
+                width={128}
+                height={128}
+              />
+              <div className="flex flex-col text-center md:text-left">
+                <h3 className="text-xl font-semibold">Aiden Wong</h3>
+                <div className="p-2 mt-2 rounded-2xl bg-gradient-to-r from-white/10 to-gray-300">
+                  <div className="text-black bg-white rounded-2xl shadow-lg backdrop-blur-md p-4">
+                    <p><b>Role:</b> Backend Developer</p>
+                    <p><b>Bio:</b> Jane is passionate about data and APIs. She specializes in building efficient server-side applications.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Developer 3 */}
+            <div className="flex flex-col md:flex-row items-center justify-center animate-blurIn space-x-8">
+              <Image
+                className="rounded-full object-cover w-32 h-32 mb-4 md:mb-0"
+                src="/developer3.jpg" // Replace with actual developer photo
+                alt="Developer 3"
+                width={128}
+                height={128}
+              />
+              <div className="flex flex-col text-center md:text-left">
+                <h3 className="text-xl font-semibold">Pranit Duddupudi</h3>
+                <div className="p-2 mt-2 rounded-2xl bg-gradient-to-r from-white/10 to-gray-300">
+                  <div className="text-black bg-white rounded-2xl shadow-lg backdrop-blur-md p-4">
+                    <p><b>Role:</b> UX/UI Designer</p>
+                    <p><b>Bio:</b> John is responsible for making the app user-friendly and visually appealing, focusing on design consistency.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Developer 4 */}
+            <div className="flex flex-col md:flex-row items-center justify-center animate-blurIn space-x-8">
+              <Image
+                className="rounded-full object-cover w-32 h-32 mb-4 md:mb-0"
+                src="/developer4.jpg" // Replace with actual developer photo
+                alt="Developer 4"
+                width={128}
+                height={128}
+              />
+              <div className="flex flex-col text-center md:text-left">
+                <h3 className="text-xl font-semibold">Martin So</h3>
+                <div className="p-2 mt-2 rounded-2xl bg-gradient-to-r from-white/10 to-gray-300">
+                  <div className="text-black bg-white rounded-2xl shadow-lg backdrop-blur-md p-4">
+                    <p><b>Role:</b> Project Manager</p>
+                    <p><b>Bio:</b> Emily coordinates the team and ensures timely delivery of features while managing client relationships.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <Foot />
-    </div>
+    </>
   );
 }
