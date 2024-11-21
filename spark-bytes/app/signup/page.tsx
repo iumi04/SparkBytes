@@ -17,6 +17,7 @@ export default function Signup() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmpassword, setConfirmpassword] = useState("");
   const [role, setRole] = useState("student");
   const [error, setError] = useState("");
 
@@ -24,8 +25,14 @@ export default function Signup() {
     e.preventDefault();
 
     // Validate input
-    if (!email || !password) {
+    if (!email || !password || !confirmpassword) {
       setError("Email and password are required");
+      return;
+    }
+
+    // Make sure that the password is typed matches with confirm password
+    if (password !== confirmpassword) {
+      setError("Please make sure the password you enter both times are the same");
       return;
     }
 
@@ -74,6 +81,14 @@ export default function Signup() {
           onChange={(e) => setPassword(e.target.value)}
           className="text-black mb-5"
         />
+        <Input 
+            type="password"
+            variant="underlined"
+            label="Confirm Password"
+            placeholder="Re-enter your password"
+            value={confirmpassword}
+            onChange={(e) => setconfirmpassword(e.target.value)}
+          />
         <Dropdown>
           <DropdownTrigger>
             <Button className="w-full">Register as: {role.charAt(0).toUpperCase() + role.slice(1)}</Button>

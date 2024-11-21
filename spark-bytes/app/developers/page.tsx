@@ -54,7 +54,7 @@ export default function Developers() {
                 <div className="p-2 mt-2 rounded-2xl bg-gradient-to-r from-white/10 to-gray-300">
                   <div className="text-black bg-white rounded-2xl shadow-lg backdrop-blur-md p-4">
                     <p><b>Role:</b> Backend Developer</p>
-                    <p><b>Bio:</b> Jane is passionate about data and APIs. She specializes in building efficient server-side applications.</p>
+                    <p><b>Bio:</b> Aiden is passionate about data and APIs. She specializes in building efficient server-side applications.</p>
                   </div>
                 </div>
               </div>
@@ -73,8 +73,8 @@ export default function Developers() {
                 <h3 className="text-xl font-semibold">Pranit Duddupudi</h3>
                 <div className="p-2 mt-2 rounded-2xl bg-gradient-to-r from-white/10 to-gray-300">
                   <div className="text-black bg-white rounded-2xl shadow-lg backdrop-blur-md p-4">
-                    <p><b>Role:</b> UX/UI Designer</p>
-                    <p><b>Bio:</b> John is responsible for making the app user-friendly and visually appealing, focusing on design consistency.</p>
+                    <p><b>Role:</b> Backend Developer</p>
+                    <p><b>Bio:</b> Pranit is responsible for making the app user-friendly and visually appealing, focusing on design consistency.</p>
                   </div>
                 </div>
               </div>
@@ -93,8 +93,8 @@ export default function Developers() {
                 <h3 className="text-xl font-semibold">Martin So</h3>
                 <div className="p-2 mt-2 rounded-2xl bg-gradient-to-r from-white/10 to-gray-300">
                   <div className="text-black bg-white rounded-2xl shadow-lg backdrop-blur-md p-4">
-                    <p><b>Role:</b> Project Manager</p>
-                    <p><b>Bio:</b> Emily coordinates the team and ensures timely delivery of features while managing client relationships.</p>
+                    <p><b>Role:</b> Frontend Developer</p>
+                    <p><b>Bio:</b> Martin coordinates the team and ensures timely delivery of features while managing client relationships.</p>
                   </div>
                 </div>
               </div>
