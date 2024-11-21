@@ -79,7 +79,7 @@ export default function Signup() {
           placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="text-black mb-5"
+          className="text-black"
         />
         <Input 
             type="password"
@@ -87,15 +87,16 @@ export default function Signup() {
             label="Confirm Password"
             placeholder="Re-enter your password"
             value={confirmpassword}
-            onChange={(e) => setconfirmpassword(e.target.value)}
+            onChange={(e) => setConfirmpassword(e.target.value)}
+            className="mb-5"
           />
         <Dropdown>
           <DropdownTrigger>
             <Button className="w-full">Register as: {role.charAt(0).toUpperCase() + role.slice(1)}</Button>
           </DropdownTrigger>
           <DropdownMenu aria-label="Select Role">
-            <DropdownItem className="text-black" onClick={() => setRole("student")}>Student</DropdownItem>
-            <DropdownItem className="text-black" onClick={() => setRole("event_organiser")}>Event Organiser</DropdownItem>
+            <DropdownItem className="text-black" onClick={() => setRole("Student")}>Student</DropdownItem>
+            <DropdownItem className="text-black" onClick={() => setRole("Event Organiser")}>Event Organiser</DropdownItem>
           </DropdownMenu>
         </Dropdown>
         <Button 
@@ -105,7 +106,7 @@ export default function Signup() {
         >
           Signup
         </Button>
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        {error && <p className="mt-3 text-red-500 text-center">{error}</p>}
         <div className="flex justify-between mt-5">
           <Link 
             href="/" 
