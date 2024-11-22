@@ -1,6 +1,9 @@
+"use client"; 
+
 import Header from "../components/header";
 import Foot from "../components/Foot";
-import { Image } from "@nextui-org/react";
+import { Image, Modal, Button, Input, Textarea } from "@nextui-org/react";
+import { useState } from "react";
 import { Nunito } from 'next/font/google';
 
 const nunito = Nunito({
@@ -9,8 +12,7 @@ const nunito = Nunito({
 });
 
 export default function Events() {
-  // Example event data (you would replace this with actual data)
-  const events = [
+  const [events, setEvents] = useState([
     {
       id: 1,
       title: "Free Pizza Party",
@@ -32,7 +34,39 @@ export default function Events() {
       date: "2024-11-25",
       location: "BU Dining Hall"
     }
-  ];
+  ]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newEvent, setNewEvent] = useState({
+    title: "",
+    description: "",
+    date: "",
+    location: ""
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setNewEvent(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleAddEvent = () => {
+    if (newEvent.title && newEvent.description && newEvent.date && newEvent.location) {
+      const newEventData = {
+        ...newEvent,
+        id: events.length + 1, 
+      };
+      setEvents([...events, newEventData]);
+      setIsModalOpen(false); 
+      setNewEvent({
+        title: "",
+        description: "",
+        date: "",
+        location: ""
+      }); 
+    }
+  };
 
   return (
     <>
@@ -49,6 +83,13 @@ export default function Events() {
             </p>
           </div>
 
+          {/* Add Event Button */}
+          <div className="flex justify-center mb-8">
+            <Button onClick={() => setIsModalOpen(true)} color="success">
+              Add Event
+            </Button>
+          </div>
+
           {/* Events List */}
           <div className="space-y-8">
             {events.map((event) => (
@@ -57,7 +98,7 @@ export default function Events() {
                   <div className="flex-1">
                     <Image
                       className="dark:invert rounded-lg object-cover object-center"
-                      src="/spark_bytes.jpeg" // You can replace with actual event image if available
+                      src="/spark_bytes.jpeg" 
                       alt={event.title}
                       width="100%"
                       height="auto"
@@ -69,7 +110,7 @@ export default function Events() {
                     <p className="text-sm text-gray-400 mb-2">Date: {event.date}</p>
                     <p className="text-sm text-gray-400 mb-4">Location: {event.location}</p>
                     <a
-                      href={`/event/${event.id}`} // Link to individual event page (you can create dynamic routing for each event)
+                      href={`/event/${event.id}`} 
                       className="bg-blue-500 text-white py-2 px-6 rounded-full text-lg hover:bg-blue-600 transition duration-300"
                     >
                       Claim Food
@@ -81,6 +122,57 @@ export default function Events() {
           </div>
         </div>
       </div>
+
+      {/* Modal for Adding Event */}
+      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <Modal.Header>
+          <h3>Add New Event</h3>
+        </Modal.Header>
+        <Modal.Body>
+          <Input
+            fullWidth
+            label="Event Title"
+            name="title"
+            value={newEvent.title}
+            onChange={handleInputChange}
+          />
+          <Textarea
+            fullWidth
+            label="Description"
+            name="description"
+            value={newEvent.description}
+            onChange={handleInputChange}
+            rows={4}
+            className="mt-4"
+          />
+          <Input
+            fullWidth
+            label="Date"
+            name="date"
+            type="date"
+            value={newEvent.date}
+            onChange={handleInputChange}
+            className="mt-4"
+          />
+          <Input
+            fullWidth
+            label="Location"
+            name="location"
+            value={newEvent.location}
+            onChange={handleInputChange}
+            className="mt-4"
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button auto flat color="error" onClick={() => setIsModalOpen(false)}>
+            Close
+          </Button>
+          <Button auto onClick={handleAddEvent}>
+            Add Event
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <Foot />
     </>
   );
