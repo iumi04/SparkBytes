@@ -54,50 +54,51 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Link href="/" className="mt-4 font-nunito font-bold text-4xl text-center pt-10"> Spark! Bytes </Link>
-      <div className="flex-grow items-center justify-center">
-        <div className="w-[70%] mx-auto">
-          <Input 
-            type="email"
-            variant="underlined"
-            label="Email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Input 
-            type="password"
-            variant="underlined"
-            label="Password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {error && <p className="text-red-500 text-center">{error}</p>}
-          <Button 
-            color="primary" 
-            className="mt-4 w-full"
-            onClick={handleLogin}
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-[70%] max-w-md bg-white p-6 rounded-lg shadow-md">
+        <Link href="/" className="mt-4 font-nunito font-bold text-4xl text-center text-black"> Spark! Bytes </Link>
+        <Input 
+          type="email"
+          variant="underlined"
+          label="Email"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="text-gray-800"
+        />
+        <Input 
+          type="password"
+          color="default"
+          variant="underlined"
+          label="Password"
+          placeholder="Enter your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="text-gray-800"
+        />
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        <Button 
+          color="primary" 
+          className="mt-4 w-full"
+          onClick={handleLogin}
+        >
+          Login
+        </Button>
+        <div className="flex justify-between mt-5">
+          <Link 
+            href="/" 
+            className="text-black hover:text-blue-400 duration-300 font-nunito"
           >
-            Login
-          </Button>
-          <div className="flex justify-between mt-5">
-            <Link 
-              href="/" 
-              className="text-current hover:text-blue-400 duration-300 font-nunito"
-            >
-              Return Home
-            </Link>
-            <Link 
-              href="/signup"
-              className="text-current hover:text-blue-400 duration-300 font-nunito"
-            >
-              Don't have an account?
-            </Link>
-          </div>
-        </div> 
-      </div>
+            Return Home
+          </Link>
+          <Link 
+            href="/signup"
+            className="text-black hover:text-blue-400 duration-300 font-nunito"
+          >
+            Don't have an account?
+          </Link>
+        </div>
+      </div> 
     </div>  
   );
 } 
