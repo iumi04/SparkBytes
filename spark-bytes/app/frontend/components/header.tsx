@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/navbar";
 import Link from 'next/link';
 import { Nunito } from 'next/font/google';
+import { RxLightningBolt } from "react-icons/rx";
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -27,7 +28,11 @@ export default function Header() {
 
   return (
     <Navbar shouldHideOnScroll className="absolute top-0 right-0 w-full z-10 p-4">
-      <NavbarBrand className="ml-4 font-nunito font-semibold">Spark Bytes</NavbarBrand>
+      <NavbarBrand className="ml-4 font-nunito font-semibold">
+      <span>Spark</span>
+      <RxLightningBolt />
+      <span>Bytes</span>
+        </NavbarBrand>
       <NavbarContent justify="end" className="flex gap-4 mr-4">
         <NavbarItem>
           <Link href="/" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">

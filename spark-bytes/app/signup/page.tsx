@@ -14,39 +14,38 @@ const nunito = Nunito({
 
 export default function Signup() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleSignup = async (e) => {
     e.preventDefault();
 
-    // Validate input
-    if (!email || !password) {
+    if (!username || !password) {
       setError("Email and password are required");
       return;
     }
 
-    // Send signup request
     try {
       const response = await fetch("http://localhost:5000/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Redirect to login page on success
+        console.log("Signup successful");
         router.push("/login");
       } else {
         setError(data.msg || "Something went wrong");
       }
     } catch (err) {
-      setError("Server error, please try again later.");
+      console.log("Something went wrong");
+      setError("Server error, cannot reach /login");
     }
   };
 
@@ -60,8 +59,8 @@ export default function Signup() {
             variant="underlined"
             label="Email"
             placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <Input 
             type="password"

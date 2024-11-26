@@ -14,36 +14,33 @@ const nunito = Nunito({
 
 export default function Login() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Validate input
-    if (!email || !password) {
+    if (!username || !password) {
       setError("Email and password are required");
       return;
     }
 
-    // Send login request
     try {
       const response = await fetch("http://localhost:5000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
+      console.log(data);
 
       if (response.ok) {
-        // Store the JWT token (could use localStorage or context)
         localStorage.setItem("access_token", data.access_token);
 
-        // Redirect to the home page or a protected route
         router.push("/");
       } else {
         setError(data.msg || "Something went wrong");
@@ -63,8 +60,8 @@ export default function Login() {
             variant="underlined"
             label="Email"
             placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <Input 
             type="password"
