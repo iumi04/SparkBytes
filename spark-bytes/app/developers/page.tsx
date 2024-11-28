@@ -1,4 +1,4 @@
-import Header from "../components/header";
+import Header from "../components/Header";
 import '../globals.css';
 import { Image } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';

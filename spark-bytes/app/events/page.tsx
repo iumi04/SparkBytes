@@ -1,6 +1,6 @@
 "use client"; 
 
-import Header from "../components/header";
+import Header from "../components/Header";
 import Foot from "../components/Foot";
 import { Image, Modal, Button, Input, Textarea } from "@nextui-org/react";
 import { useState } from "react";
