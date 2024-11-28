@@ -1,3 +1,7 @@
+// this provides context for the user's "state" it can give info for if the user 
+// is a student or a event organizer
+// (it's not complete cuz its not fully connected to the data base i.e. the useEffect part)
+
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';

@@ -1,7 +1,7 @@
 'use client'; // Ensure this is a client component
 
 import { useUser } from '../context/UserContext'; // Import useUser
-import Header from "../components/header"; 
+import Header from "../components/Header"; 
 import Foot from "../components/Foot"; 
 import { Image } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';

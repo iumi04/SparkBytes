@@ -1,7 +1,7 @@
 'use client'; // Ensure this is a client component
 
 import { useUser } from '../context/UserContext'; // Import useUser
-import Header from "../components/header";
+import Header from "../components/Header";
 import StudentHeader from "../components/StudentHeader"; // Import StudentHeader
 import EventOrganizerHeader from "../components/EventOrganizerHeader"; // Import EventOrganizerHeader
 import '../globals.css';

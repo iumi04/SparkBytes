@@ -1,6 +1,6 @@
 'use client'; // Ensure this is a client component
 
-import Header from "./components/header";
+import Header from "./components/Header";
 import StudentHeader from "./components/StudentHeader";
 import EventOrganizerHeader from "./components/EventOrganizerHeader";
 import { useUser } from './context/UserContext';
