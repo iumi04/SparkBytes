@@ -1,4 +1,5 @@
 import { NextUIProvider } from "@nextui-org/react";
+import { UserProvider } from './context/UserContext';
 
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -31,7 +32,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextUIProvider>
-          {children}
+          <UserProvider>
+            {children}
+          </UserProvider>
         </NextUIProvider>
       </body>
     </html>
