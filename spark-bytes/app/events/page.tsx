@@ -5,6 +5,7 @@ import Foot from "../components/Foot";
 import { Image, Modal, Button, Input, Textarea } from "@nextui-org/react";
 import { useState } from "react";
 import { Nunito } from 'next/font/google';
+import AddEvent from "../frontend/addevent/page";
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -84,11 +85,12 @@ export default function Events() {
           </div>
 
           {/* Add Event Button */}
-          <div className="flex justify-center mb-8">
-            <Button onClick={() => setIsModalOpen(true)} color="success">
+          <a href="addevent" className="text-decoration: none;">
+            <button className="padding: 10px 20px; font-size: 16px; cursor: pointer;">
               Add Event
-            </Button>
-          </div>
+            </button>
+          </a>
+
 
           {/* Events List */}
           <div className="space-y-8">
