@@ -1,7 +1,12 @@
-import Header from "../components/header"; 
+'use client'; // Ensure this is a client component
+
+import { useUser } from '../context/UserContext'; // Import useUser
+import Header from "../components/Header"; 
 import Foot from "../components/Foot"; 
 import { Image } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';
+import StudentHeader from "../components/StudentHeader"; // Import StudentHeader
+import EventOrganizerHeader from "../components/EventOrganizerHeader"; // Import EventOrganizerHeader
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -9,9 +14,15 @@ const nunito = Nunito({
 });
 
 export default function About() {
+  const { isLoggedIn, userType } = useUser(); // Get user state from context
+
   return (
     <>
-      <Header />
+      {isLoggedIn ? (
+        userType === 'student' ? <StudentHeader /> : <EventOrganizerHeader />
+      ) : (
+        <Header />
+      )}
       <div className="flex items-center justify-center min-h-screen bg-background text-foreground p-8">
         <div className="flex flex-col w-full max-w-5xl space-y-12">
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">

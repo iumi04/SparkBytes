@@ -1,6 +1,9 @@
 "use client"; 
 
-import Header from "../components/header";
+import { useUser } from '../context/UserContext'; // Import useUser
+import Header from "../components/Header";
+import StudentHeader from "../components/StudentHeader"; // Import StudentHeader
+import EventOrganizerHeader from "../components/EventOrganizerHeader"; // Import EventOrganizerHeader
 import Foot from "../components/Foot";
 import { Image, Modal, Button, Input, Textarea } from "@nextui-org/react";
 import { useState } from "react";
@@ -13,6 +16,7 @@ const nunito = Nunito({
 });
 
 export default function Events() {
+  const { isLoggedIn, userType } = useUser(); // Get user state from context
   const [events, setEvents] = useState([
     {
       id: 1,
@@ -71,7 +75,11 @@ export default function Events() {
 
   return (
     <>
-      <Header />
+      {isLoggedIn ? (
+        userType === 'student' ? <StudentHeader /> : <EventOrganizerHeader />
+      ) : (
+        <Header />
+      )}
       <div className="flex items-center justify-center min-h-screen p-8 bg-background text-foreground">
         <div className="flex flex-col w-full max-w-5xl space-y-12">
           {/* Section Title */}

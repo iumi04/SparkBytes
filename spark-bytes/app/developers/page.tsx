@@ -1,4 +1,9 @@
-import Header from "../components/header";
+'use client'; // Ensure this is a client component
+
+import { useUser } from '../context/UserContext'; // Import useUser
+import Header from "../components/Header";
+import StudentHeader from "../components/StudentHeader"; // Import StudentHeader
+import EventOrganizerHeader from "../components/EventOrganizerHeader"; // Import EventOrganizerHeader
 import '../globals.css';
 import { Image } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';
@@ -11,9 +16,15 @@ const nunito = Nunito({
 });
 
 export default function Developers() {
+  const { isLoggedIn, userType } = useUser(); // Get user state from context
+
   return (
     <>
-      <Header />
+      {isLoggedIn ? (
+        userType === 'student' ? <StudentHeader /> : <EventOrganizerHeader />
+      ) : (
+        <Header />
+      )}
       <div className="flex items-center justify-center min-h-screen p-8 bg-background text-foreground">
         <div className="flex w-full max-w-4xl flex-col items-center">
           <h1 className="text-4xl font-bold mb-8 mt-20">Meet the Developers</h1>
