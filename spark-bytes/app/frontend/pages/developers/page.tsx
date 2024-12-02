@@ -1,13 +1,13 @@
 'use client'; // Ensure this is a client component
 
-import { useUser } from '../context/UserContext'; // Import useUser
-import Header from "../components/Header";
-import StudentHeader from "../components/StudentHeader"; // Import StudentHeader
-import EventOrganizerHeader from "../components/EventOrganizerHeader"; // Import EventOrganizerHeader
+import { useUser } from '../../context/UserContext'; // Import useUser
+import Header from "../../components/Header";
+import StudentHeader from "../../components/StudentHeader"; // Import StudentHeader
+import EventOrganizerHeader from "../../components/EventOrganizerHeader"; // Import EventOrganizerHeader
 import '../globals.css';
 import { Image } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';
-import Foot from "../components/Foot";
+import Foot from "../../components/Foot";
 
 // Font import for consistency
 const nunito = Nunito({

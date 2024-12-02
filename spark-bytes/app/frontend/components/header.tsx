@@ -35,17 +35,17 @@ export default function Header() {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/about" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+          <Link href="/frontend/pages/about" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
             about
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/events" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+          <Link href="/frontend/pages/events" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
             events
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/login" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+          <Link href="/frontend/pages/login" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
             login
           </Link>
         </NavbarItem>

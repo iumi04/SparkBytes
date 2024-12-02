@@ -1,7 +1,12 @@
-import Header from "../components/header"; // Adjust the import if needed
-import Foot from "../components/Foot"; // Adjust the import if needed
+'use client'; // Ensure this is a client component
+
+import { useUser } from '../../context/UserContext'; // Import useUser
+import Header from "../../components/Header"; 
+import Foot from "../../components/Foot"; 
 import { Image } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';
+import StudentHeader from "../../components/StudentHeader"; // Import StudentHeader
+import EventOrganizerHeader from "../../components/EventOrganizerHeader"; // Import EventOrganizerHeader
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -9,12 +14,17 @@ const nunito = Nunito({
 });
 
 export default function About() {
+  const { isLoggedIn, userType } = useUser(); // Get user state from context
+
   return (
     <>
-      <Header />
+      {isLoggedIn ? (
+        userType === 'student' ? <StudentHeader /> : <EventOrganizerHeader />
+      ) : (
+        <Header />
+      )}
       <div className="flex items-center justify-center min-h-screen bg-background text-foreground p-8">
         <div className="flex flex-col w-full max-w-5xl space-y-12">
-          {/* Image and Text Section */}
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
             <div className="flex-1">
               <Image
@@ -48,7 +58,6 @@ export default function About() {
             </div>
           </div>
 
-          {/* Call to Action Section */}
           <div className="text-center mt-12">
             <h2 className="text-2xl font-semibold text-primary mb-4">
               Join the Movement
@@ -59,7 +68,7 @@ export default function About() {
             </p>
             <div className="mt-8">
               <a
-                href="/signup" // Make sure to add a signup link for a real call to action
+                href="/frontend/pages/signup" //link to login/register pg when we make it <<IMPORTANT>>
                 className="bg-blue-500 text-white py-2 px-6 rounded-full text-lg hover:bg-blue-600 transition duration-300"
               >
                 Get Started

@@ -1,6 +1,5 @@
-'use client'; // This is a client component
+'use client';
 
-import { useState, useEffect } from 'react';
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/navbar";
 import Link from 'next/link';
 import { Nunito } from 'next/font/google';
@@ -10,21 +9,7 @@ const nunito = Nunito({
   weight: ['400', '700'],
 });
 
-export default function Header() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDarkMode]);
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
+export default function StudentHeader() {
   return (
     <Navbar shouldHideOnScroll className="absolute top-0 right-0 w-full z-10 p-4">
       <NavbarBrand className="ml-4 font-nunito font-semibold">Spark Bytes</NavbarBrand>
@@ -35,21 +20,21 @@ export default function Header() {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/about" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+          <Link href="/frontend/pages/about" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
             about
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/events" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
-            events
+          <Link href="/frontend/pages/attend-events" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+            attend events
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/login" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+          <Link href="/frontend/pages/login" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
             login
           </Link>
         </NavbarItem>
       </NavbarContent>
     </Navbar>
   );
-}
+} 

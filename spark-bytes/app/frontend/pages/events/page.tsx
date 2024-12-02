@@ -1,14 +1,14 @@
 "use client"; 
 
-import { useUser } from '../context/UserContext'; // Import useUser
-import Header from "../components/Header";
-import StudentHeader from "../components/StudentHeader"; // Import StudentHeader
-import EventOrganizerHeader from "../components/EventOrganizerHeader"; // Import EventOrganizerHeader
-import Foot from "../components/Foot";
+import { useUser } from '../../context/UserContext'; // Import useUser
+import Header from "../../components/Header";
+import StudentHeader from "../../components/StudentHeader"; // Import StudentHeader
+import EventOrganizerHeader from "../../components/EventOrganizerHeader"; // Import EventOrganizerHeader
+import Foot from "../../components/Foot";
 import { Image, Modal, Button, Input, Textarea } from "@nextui-org/react";
 import { useState } from "react";
 import { Nunito } from 'next/font/google';
-import AddEvent from "../frontend/addevent/page";
+import AddEvent from "../addevent/page";
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -93,11 +93,13 @@ export default function Events() {
           </div>
 
           {/* Add Event Button */}
-          <a href="addevent" className="text-decoration: none;">
-            <button className="padding: 10px 20px; font-size: 16px; cursor: pointer;">
-              Add Event
-            </button>
-          </a>
+          <Button 
+            as="a" // Use 'as' prop to render as an anchor tag
+            href="/frontend/pages/addevent" 
+            className="padding: 10px 20px; font-size: 16px; cursor: pointer;"
+          >
+            Add Event
+          </Button>
 
 
           {/* Events List */}
@@ -132,8 +134,8 @@ export default function Events() {
           </div>
         </div>
       </div>
-
-      {/* Modal for Adding Event */}
+      { /* 
+      {/* Modal for Adding Event *}
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <Modal.Header>
           <h3>Add New Event</h3>
@@ -182,6 +184,7 @@ export default function Events() {
           </Button>
         </Modal.Footer>
       </Modal>
+      */}
 
       <Foot />
     </>

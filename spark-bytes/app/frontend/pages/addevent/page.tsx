@@ -1,5 +1,7 @@
-import Header from "../components/header";
-import Foot from "../components/Foot";
+'use client';
+
+import Header from "../../components/Header";
+import Foot from "../../components/Foot";
 import { Input, Textarea, Button } from "@nextui-org/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -14,7 +16,7 @@ export default function AddEvent() {
     location: "",
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setNewEvent((prevState) => ({
       ...prevState,
@@ -31,7 +33,7 @@ export default function AddEvent() {
     ) {
       console.log("New Event Created:", newEvent);
       alert("Event successfully created!");
-      router.push("/events"); // Redirects back to events page
+      router.push("/frontend/pages/events"); // Redirects back to events page
     } else {
       alert("Please fill in all fields.");
     }

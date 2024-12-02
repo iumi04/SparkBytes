@@ -9,7 +9,7 @@ const nunito = Nunito({
   weight: ['400', '700'],
 });
 
-export default function StudentHeader() {
+export default function EventOrganizerHeader() {
   return (
     <Navbar shouldHideOnScroll className="absolute top-0 right-0 w-full z-10 p-4">
       <NavbarBrand className="ml-4 font-nunito font-semibold">Spark Bytes</NavbarBrand>
@@ -20,17 +20,17 @@ export default function StudentHeader() {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/about" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+          <Link href="/frontend/pages/about" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
             about
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/attend-events" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
-            attend events
+          <Link href="/frontend/pages/manage-events" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+            manage events
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/login" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+          <Link href="/frontend/pages/login" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
             login
           </Link>
         </NavbarItem>
