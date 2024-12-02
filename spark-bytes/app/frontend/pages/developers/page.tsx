@@ -8,8 +8,8 @@ import '../globals.css';
 import { Image } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';
 import Foot from "../../components/Foot";
+import { useState, useEffect } from 'react';
 
-// Font import for consistency
 const nunito = Nunito({
   subsets: ['latin'],
   weight: ['400', '700'],

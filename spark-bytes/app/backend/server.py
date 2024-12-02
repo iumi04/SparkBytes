@@ -3,78 +3,123 @@ from pymongo import MongoClient
 from passlib.hash import bcrypt
 import certifi
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+from flask_cors import CORS
+import re
 
-# MongoDB connection string
+app = Flask(__name__)
+
+CORS(app, resources={r"/*": {"origins": "*"}})
+
 MONGO_URI = "mongodb+srv://pranitd23:rg4s4CiRNiF9P8BT@cluster0.ixopq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
-db = client["sparkbytes"]
-collection = db["users"]
+db = client["logininfo"] 
+collection = db["sparkbytes"]
 
-# Flask app setup
-app = Flask(__name__)
-app.config["JWT_SECRET_KEY"] = "your_jwt_secret_key"  # Replace with your own secret key
+app.config["JWT_SECRET_KEY"] = "nobucketsumi" 
 jwt = JWTManager(app)
 
-# Home route
 @app.route("/")
 def home():
     return "Hello, Flask!"
 
-# Signup route
-@app.route("/signup", methods=["POST"])
+@app.route("/signup", methods=["OPTIONS", "POST"])
 def signup():
+    if request.method == "OPTIONS":
+        response = jsonify({"msg": "Preflight OK"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        return response, 200
+    
     data = request.get_json()
 
-    # Validate input data
-    if not data.get("email") or not data.get("password"):
-        return jsonify({"msg": "Email and password are required"}), 400
-
-    email = data["email"]
+    username = data["username"]
     password = data["password"]
 
-    # Check if user already exists
-    existing_user = collection.find_one({"email": email})
+    if not re.match(r"^[a-zA-Z0-9._%+-]+@bu\.edu$", username):
+        return jsonify({"msg": "Only @bu.edu emails are allowed"}), 400
+
+
+    if not data.get("username") or not data.get("password"):
+        return jsonify({"msg": "Email and password are required"}), 400
+
+
+
+    existing_user = collection.find_one({"username": username})
     if existing_user:
         return jsonify({"msg": "User already exists"}), 400
 
-    # Hash the password before storing it
     hashed_password = bcrypt.hash(password)
 
-    # Save user to the database
-    collection.insert_one({"email": email, "password": hashed_password})
+    collection.insert_one({"username": username, "password": hashed_password})
 
     return jsonify({"msg": "User created successfully"}), 201
 
-# Login route
 @app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
-
-    email = data.get("email")
+    
+    username = data.get("username")
     password = data.get("password")
 
-    if not email or not password:
+    if not username or not password:
         return jsonify({"msg": "Email and password are required"}), 400
 
-    # Find the user by email
-    user = collection.find_one({"email": email})
+    user = collection.find_one({"username": username})
     if not user:
-        return jsonify({"msg": "Invalid email or password"}), 401
+        return jsonify({"msg": "Invalid email"}), 401
 
-    # Check if the password is correct
     if not bcrypt.verify(password, user["password"]):
-        return jsonify({"msg": "Invalid email or password"}), 401
+        return jsonify({"msg": "Invalid password"}), 401
 
-    # Generate JWT token
-    access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token), 200
+    access_token = create_access_token(identity=username)
 
-# Protected route (Example)
+    return jsonify({"access_token": access_token}), 200
+
+
 @app.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
     return jsonify(message="This is a protected route"), 200
 
+@app.route("/get_users", methods=["GET"])
+def get_users():
+    try:
+        users = collection.find()
+
+        users_list = []
+        for user in users:
+            users_list.append({
+                "id": str(user["_id"]),  
+                "email": user["email"],
+                "role": user.get("role", "user"),  
+            })
+
+       
+        return jsonify(users_list), 200
+    except Exception as e:
+        return jsonify({"msg": "Error retrieving users", "error": str(e)}), 500
+    
+
+@app.route("/get-login", methods=["GET"])
+def get_login():
+    try:
+        data = collection.find()
+
+        result = []
+        for document in data:
+            document["_id"] = str(document["_id"])  
+            result.append(document)
+
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+    
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True)   
+
+
