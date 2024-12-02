@@ -34,25 +34,28 @@ def signup():
     
     data = request.get_json()
 
+    email = data["email"]
     username = data["username"]
     password = data["password"]
+    role = data["role"]
 
-    if not re.match(r"^[a-zA-Z0-9._%+-]+@bu\.edu$", username):
+    if not re.match(r"^[a-zA-Z0-9._%+-]+@bu\.edu$", email):
         return jsonify({"msg": "Only @bu.edu emails are allowed"}), 400
 
-
-    if not data.get("username") or not data.get("password"):
+    if not data.get("username") or not data.get("password") or not data.get("email"):
         return jsonify({"msg": "Email and password are required"}), 400
-
-
 
     existing_user = collection.find_one({"username": username})
     if existing_user:
-        return jsonify({"msg": "User already exists"}), 400
+        return jsonify({"msg": "Username already exists"}), 400
+    
+    existing_email = collection.find_one({"email": email})
+    if existing_email:
+        return jsonify({"msg:" "Email is being used by another account"}), 400
 
     hashed_password = bcrypt.hash(password)
 
-    collection.insert_one({"username": username, "password": hashed_password})
+    collection.insert_one({"email": email, "username": username, "password": hashed_password, "role": role})
 
     return jsonify({"msg": "User created successfully"}), 201
 
@@ -64,11 +67,11 @@ def login():
     password = data.get("password")
 
     if not username or not password:
-        return jsonify({"msg": "Email and password are required"}), 400
+        return jsonify({"msg": "Username and password are required"}), 400
 
     user = collection.find_one({"username": username})
     if not user:
-        return jsonify({"msg": "Invalid email"}), 401
+        return jsonify({"msg": "Invalid username"}), 401
 
     if not bcrypt.verify(password, user["password"]):
         return jsonify({"msg": "Invalid password"}), 401

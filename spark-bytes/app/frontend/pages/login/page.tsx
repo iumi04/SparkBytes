@@ -22,7 +22,7 @@ export default function Login() {
     e.preventDefault();
 
     if (!username || !password) {
-      setError("Email and password are required");
+      setError("Username and password are required");
       return;
     }
 
@@ -57,12 +57,12 @@ export default function Login() {
           <Link href="/" className="mt-4 font-nunito font-bold text-4xl text-center text-black"> Spark! Bytes </Link>
           <form onSubmit={handleLogin}>
             <Input 
-              type="email"
+              type="text"
               variant="underlined"
-              label="Email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              label="Username"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="text-gray-800"
             />
             <Input 

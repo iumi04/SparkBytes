@@ -1,6 +1,6 @@
 'use client'; // Ensure this is a client component
 
-import Header from "./frontend/components/Header";
+import Header from "./frontend/components/header";
 import StudentHeader from "./frontend/components/StudentHeader";
 import EventOrganizerHeader from "./frontend/components/EventOrganizerHeader";
 import { useUser } from './frontend/context/UserContext';

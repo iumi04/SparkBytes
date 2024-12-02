@@ -15,6 +15,7 @@ const nunito = Nunito({
 
 export default function Signup() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmpassword] = useState("");
@@ -24,8 +25,8 @@ export default function Signup() {
   const handleSignup = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (!username || !password) {
-      setError("Email and password are required");
+    if (!username || !password || !username) {
+      setError("Email, username, and password are required");
       return;
     }
 
@@ -35,20 +36,20 @@ export default function Signup() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password, role }),
+        body: JSON.stringify({ username, password, role, email }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         console.log("Signup successful");
-        router.push("/login");
+        router.push("/frontend/pages/login");
       } else {
         setError(data.msg || "Something went wrong");
       }
     } catch (err) {
       console.log("Something went wrong");
-      setError("Server error, cannot reach /login");
+      setError("Server error, cannot reach /frontend/pages/login");
     }
   };
 
@@ -62,6 +63,17 @@ export default function Signup() {
             variant="underlined"
             label="Email"
             placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            classNames={{
+              input: ["text-black/50"]
+            }}
+          />
+          <Input 
+            type="text"
+            variant="underlined"
+            label="Username"
+            placeholder="Enter your username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
