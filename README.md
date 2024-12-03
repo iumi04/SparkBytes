@@ -5,8 +5,9 @@ Developing a working software application system that enables Boston University 
 called Spark!Bytes.
 
 # Get Started
-1. Make sure you are in ../SparkBytes/spark-bytes. To do this, cd into "spark-bytes" using the following command:
+1. Clone this repository and open it in your IDE.
+2. Make sure you are in ../SparkBytes/spark-bytes. To do this, cd into "spark-bytes" using the following command:
 ```cd spark-bytes```
-2. Then, run the following command:
+3. Then, run the following command:
 ```npm run dev```
-3. You have access to the website!
+4. You have access to the website!
