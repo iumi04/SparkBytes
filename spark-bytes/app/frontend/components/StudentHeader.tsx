@@ -3,6 +3,7 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/navbar";
 import Link from 'next/link';
 import { Nunito } from 'next/font/google';
+import { useUser } from '../context/UserContext'; // Import useUser hook
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -10,6 +11,8 @@ const nunito = Nunito({
 });
 
 export default function StudentHeader() {
+  const { isLoggedIn, logout } = useUser(); // Get isLoggedIn and logout from UserContext
+
   return (
     <Navbar shouldHideOnScroll className="absolute top-0 right-0 w-full z-10 p-4">
       <NavbarBrand className="ml-4 font-nunito font-semibold">Spark Bytes</NavbarBrand>
@@ -34,6 +37,16 @@ export default function StudentHeader() {
             login
           </Link>
         </NavbarItem>
+        {isLoggedIn && ( // Show logout button only if logged in
+          <NavbarItem>
+            <button 
+              onClick={logout} 
+              className="text-current hover:text-red-400 duration-300 font-nunito font-semibold"
+            >
+              logout
+            </button>
+          </NavbarItem>
+        )}
       </NavbarContent>
     </Navbar>
   );
