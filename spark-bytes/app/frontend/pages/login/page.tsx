@@ -6,6 +6,7 @@ import { Nunito } from 'next/font/google';
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
+import { useUser } from '../../context/UserContext';
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -14,6 +15,7 @@ const nunito = Nunito({
 
 export default function Login() {
   const router = useRouter();
+  const { login } = useUser();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -27,7 +29,7 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/login", {
+      const response = await fetch("http://127.0.0.1:5000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,7 +42,9 @@ export default function Login() {
 
       if (response.ok) {
         localStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("user_type", data.role);
 
+        login(data.role);
         router.push("/");
       } else {
         setError(data.msg || "Something went wrong");

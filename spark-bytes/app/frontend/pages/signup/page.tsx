@@ -30,8 +30,13 @@ export default function Signup() {
       return;
     }
 
+    if (password != confirmpassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
     try {
-      const response = await fetch("http://localhost:5000/signup", {
+      const response = await fetch("http://127.0.0.1:5000/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +54,7 @@ export default function Signup() {
       }
     } catch (err) {
       console.log("Something went wrong");
-      setError("Server error, cannot reach /frontend/pages/login");
+      setError((err as Error).message);
     }
   };
 

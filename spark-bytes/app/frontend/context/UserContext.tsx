@@ -1,6 +1,5 @@
 // this provides context for the user's "state" it can give info for if the user 
-// is a student or a event organizer
-// (it's not complete cuz its not fully connected to the data base i.e. the useEffect part)
+// is a student or a event organizer 
 
 'use client';
 
@@ -22,11 +21,31 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     if (token) {
-      // Here you would typically fetch user data from your API
-      // For demonstration, let's assume the user type is stored in localStorage
-      const type = localStorage.getItem('user_type') as 'student' | 'event_organiser' | null;
-      setIsLoggedIn(true);
-      setUserType(type);
+      // Fetch user data from the database
+      fetch('http://localhost:5000/get-login', { // Adjust the URL as needed
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Assuming the user data contains a 'role' field
+        const type = data.length > 0 ? data[0].role : null; // Adjust based on your data structure
+        setIsLoggedIn(true);
+        setUserType(type);
+      })
+      .catch(error => {
+        console.error('Error fetching user data:', error);
+        setIsLoggedIn(false);
+        setUserType(null);
+      });
     }
   }, []);
 
@@ -41,6 +60,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUserType(null);
     localStorage.removeItem('access_token');
     localStorage.removeItem('user_type');
+    alert('You have been logged out successfully.');
   };
 
   return (

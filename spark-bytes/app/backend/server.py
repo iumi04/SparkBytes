@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-MONGO_URI = "mongodb+srv://pranitd23:rg4s4CiRNiF9P8BT@cluster0.ixopq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+MONGO_URI = "mongodb+srv://pranitd23:2YXiehbHn1BAhYLX@cluster0.ixopq.mongodb.net/?retryWrites=true&w=majority"
 
 client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
 db = client["logininfo"] 
@@ -21,7 +21,7 @@ jwt = JWTManager(app)
 
 @app.route("/")
 def home():
-    return "Hello, Flask!"
+    return "Server Running"
 
 @app.route("/signup", methods=["OPTIONS", "POST"])
 def signup():
@@ -78,7 +78,7 @@ def login():
 
     access_token = create_access_token(identity=username)
 
-    return jsonify({"access_token": access_token}), 200
+    return jsonify({"access_token": access_token, "role": user["role"]}), 200
 
 
 @app.route("/protected", methods=["GET"])
@@ -95,7 +95,8 @@ def get_users():
         for user in users:
             users_list.append({
                 "id": str(user["_id"]),  
-                "email": user["email"],
+                "email": user.get("email", "No email provided"),
+                "username": user.get("username", "No username provided"),
                 "role": user.get("role", "user"),  
             })
 
