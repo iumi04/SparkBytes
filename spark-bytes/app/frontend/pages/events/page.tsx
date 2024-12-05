@@ -69,7 +69,7 @@ export default function Events() {
   ]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<any>(null); // Event details for modal
+  const [selectedEvent, setSelectedEvent] = useState<any>(null); //event details for modal
 
   const openModal = (event: any) => {
     setSelectedEvent(event);
