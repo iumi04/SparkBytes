@@ -1,12 +1,14 @@
 'use client';
 
+import { useUser } from '../../context/UserContext'; // Import useUser for user context
 import Header from "../../components/Header";
 import Foot from "../../components/Foot";
 import { Input, Textarea, Button } from "@nextui-org/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function AddEvent() {
+  const { isLoggedIn, userType } = useUser(); // Get user state from context
   const router = useRouter();
 
   const [newEvent, setNewEvent] = useState({
@@ -15,6 +17,13 @@ export default function AddEvent() {
     date: "",
     location: "",
   });
+
+  useEffect(() => {
+    // Redirect to events page if the user is not an event organizer
+    if (!isLoggedIn || userType !== 'eventOrganizer') {
+      router.push('/frontend/pages/events'); // Redirect to events page if not an event organizer
+    }
+  }, [isLoggedIn, userType, router]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -38,6 +47,10 @@ export default function AddEvent() {
       alert("Please fill in all fields.");
     }
   };
+
+  if (!isLoggedIn || userType !== 'event_organiser') {
+    return null; // Don't render anything if not a student
+  }
 
   return (
     <>
