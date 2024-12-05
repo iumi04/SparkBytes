@@ -13,8 +13,10 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 MONGO_URI = "mongodb+srv://pranitd23:2YXiehbHn1BAhYLX@cluster0.ixopq.mongodb.net/?retryWrites=true&w=majority"
 
 client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
-db = client["logininfo"] 
-collection = db["sparkbytes"]
+loginInfo_db = client["logininfo"] 
+loginInfo_collection = loginInfo_db["sparkbytes"]
+events_db = client["events"]
+events_collection = events_db["sparkbytes"]
 
 app.config["JWT_SECRET_KEY"] = "nobucketsumi" 
 jwt = JWTManager(app)
@@ -45,17 +47,17 @@ def signup():
     if not data.get("username") or not data.get("password") or not data.get("email"):
         return jsonify({"msg": "Email and password are required"}), 400
 
-    existing_user = collection.find_one({"username": username})
+    existing_user = loginInfo_collection.find_one({"username": username})
     if existing_user:
         return jsonify({"msg": "Username already exists"}), 400
     
-    existing_email = collection.find_one({"email": email})
+    existing_email = loginInfo_collection.find_one({"email": email})
     if existing_email:
         return jsonify({"msg:" "Email is being used by another account"}), 400
 
     hashed_password = bcrypt.hash(password)
 
-    collection.insert_one({"email": email, "username": username, "password": hashed_password, "role": role})
+    loginInfo_collection.insert_one({"email": email, "username": username, "password": hashed_password, "role": role})
 
     return jsonify({"msg": "User created successfully"}), 201
 
@@ -69,7 +71,7 @@ def login():
     if not username or not password:
         return jsonify({"msg": "Username and password are required"}), 400
 
-    user = collection.find_one({"username": username})
+    user = loginInfo_collection.find_one({"username": username})
     if not user:
         return jsonify({"msg": "Invalid username"}), 401
 
@@ -89,7 +91,7 @@ def protected():
 @app.route("/get_users", methods=["GET"])
 def get_users():
     try:
-        users = collection.find()
+        users = loginInfo_collection.find()
 
         users_list = []
         for user in users:
@@ -109,7 +111,7 @@ def get_users():
 @app.route("/get-login", methods=["GET"])
 def get_login():
     try:
-        data = collection.find()
+        data = loginInfo_collection.find()
 
         result = []
         for document in data:
@@ -120,7 +122,20 @@ def get_login():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-    
+"get all events"
+@app.route("/get_events", methods=["GET"])
+def get_events():
+    try:
+        events = events_collection.find()
+
+        events_list = []
+        for event in events:
+            event["_id"] = str(event["_id"])
+            events_list.append(event)
+
+        return jsonify(events_list), 200
+    except Exception as e:
+        return jsonify({"msg":"Error retrieving events", "error": str(e)}), 500
 
 
 if __name__ == "__main__":
