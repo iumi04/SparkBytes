@@ -54,39 +54,40 @@ export default function ManageEvents() {
     fetchEvents();
   }, []);
 
+  // Render the appropriate header based on user type
+  const renderHeader = () => {
+    if (isLoggedIn) {
+      return userType === 'student' ? <StudentHeader /> : <EventOrganizerHeader />;
+    }
+    return <Header />;
+  };
+
   return (
     <>
-      {isLoggedIn ? (
-        userType === 'student' ? <StudentHeader /> : <EventOrganizerHeader />
-      ) : (
-        <Header />
-      )}
+      {renderHeader()}
 
       <div className={`min-h-screen pt-32 p-8 bg-background text-foreground ${nunito.className}`}> 
         <div className="max-w-7xl mx-auto space-y-12">
           {/* Section Title */}
           <div className="text-center">
-            <h1 className="text-4xl font-semibold text-primary mb-4">
+            <h1 className={`text-4xl font-semibold text-primary mb-4`}>
               Manage Events
             </h1>
-            <p className="text-lg max-w-2xl mx-auto mb-12">
+            <p className={`text-lg max-w-2xl mx-auto mb-12`}>
               Here you can manage your events, add new ones, or edit existing events.
             </p>
           </div>
-
-          {/* Add Event Button for Event Organizers Only */}
-          {userType === 'event_organiser' && (
-            <div className="text-center mb-8">
-              <Button 
-                as="a"
-                href="/frontend/pages/addevent" 
-                color="primary" 
-                className="text-lg py-2 px-6 rounded-full"
-              >
-                Add Event
-              </Button>
-            </div>
-          )}
+          
+          <div className="text-center mb-8"> {/* add event button */}
+            <Button 
+            as="a"
+            href="/frontend/pages/addevent" // Link to the Add Event page
+            color="primary" 
+            className="text-lg py-2 px-6 rounded-full"
+            >
+            Add Event
+            </Button>
+          </div>
 
           {/* Events Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -102,8 +103,12 @@ export default function ManageEvents() {
                   />
                 </div>
                 <div className="flex-1 text-center lg:text-left mb-4">
-                  <h2 className="text-2xl font-semibold text-primary mb-2">{event.title}</h2>
-                  <p className="text-lg mb-4">{event.description}</p>
+                  <h2 className={`text-2xl font-semibold text-primary mb-2`}>
+                    {event.title}
+                  </h2>
+                  <p className={`text-lg mb-4`}>
+                    {event.description}
+                  </p>
                   <Button 
                     as="a"
                     href={`/frontend/pages/manage-events/${event._id}`} 
@@ -119,7 +124,26 @@ export default function ManageEvents() {
         </div>
       </div>
 
-      <Foot/>
+      {/* Modal for Event Details */}
+      {selectedEvent && (
+        <Modal open={isModalOpen} onClose={closeModal}>
+          <Modal.Header>
+            <h3>{selectedEvent.title}</h3>
+          </Modal.Header>
+          <Modal.Body>
+            <p><strong>Date:</strong> {selectedEvent.date}</p>
+            <p><strong>Location:</strong> {selectedEvent.location}</p>
+            <p>{selectedEvent.details}</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button auto flat color="error" onClick={closeModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+
+      <Foot />
     </>
-  )
+  );
 }

@@ -42,11 +42,11 @@ export default function Login() {
       if (response.ok) {
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("user_type", data.role);
-        login(data.role);
+        login(data.role as 'student' | 'event_organiser', data.access_token);
 
         router.push("/");
       } else {
-        setError(data.msg || "Something went wrong");
+        setError(data.msg|| "Something went wrong");
       }
     } catch (err) {
       setError("Server error, please try again later.");
