@@ -6,7 +6,7 @@ import StudentHeader from "../../components/StudentHeader";
 import EventOrganizerHeader from "../../components/EventOrganizerHeader"; 
 import Foot from "../../components/Foot";
 import { Image, Button, Modal } from "@nextui-org/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Nunito } from 'next/font/google';
 import { useRouter } from "next/navigation";
 
@@ -16,60 +16,11 @@ const nunito = Nunito({
 });
 
 export default function Events() {
-  const { isLoggedIn, userType } = useUser(); //get user state from context
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: "Free Pizza Party",
-      description: "Join us for a pizza party after the seminar! Leftover pizza will be available for pickup.",
-      date: "2024-11-20",
-      location: "BU Seminar Hall",
-      details: "Join us at BU Seminar Hall to grab some leftover pizza after the seminar. The event will start right after the session ends."
-    },
-    {
-      id: 2,
-      title: "Lunch Donation from Tech Conference",
-      description: "Leftover sandwiches and snacks from a tech conference. Grab your lunch here!",
-      date: "2024-11-22",
-      location: "BU Conference Center",
-      details: "Come over to BU Conference Center and grab some leftover sandwiches and snacks from the recent tech conference!"
-    },
-    {
-      id: 3,
-      title: "Post-Event Dessert Grab",
-      description: "Delicious desserts from the university event. Come get some free sweets!",
-      date: "2024-11-25",
-      location: "BU Dining Hall",
-      details: "Free desserts left after the university event. Come to BU Dining Hall for some sweet treats!"
-    },
-    {
-      id: 4,
-      title: "Afternoon Tea",
-      description: "Enjoy some leftover tea and snacks after the afternoon seminar.",
-      date: "2024-12-01",
-      location: "BU Tea Room",
-      details: "Come to the BU Tea Room and enjoy leftover tea and snacks after the seminar!"
-    },
-    {
-      id: 5,
-      title: "Healthy Snack Grab",
-      description: "Healthy snacks donated after a wellness seminar. Grab your bite!",
-      date: "2024-12-03",
-      location: "BU Wellness Center",
-      details: "Grab a quick snack after the wellness seminar at the BU Wellness Center!"
-    },
-    {
-      id: 6,
-      title: "Post-Conference Drinks",
-      description: "Leftover drinks from the recent conference. Come grab a refreshing beverage!",
-      date: "2024-12-05",
-      location: "BU Conference Center",
-      details: "Grab some leftover drinks from the recent BU conference, available at the BU Conference Center!"
-    }
-  ]);
-
+  const { isLoggedIn, userType } = useUser(); // Get user state from context
+  const router = useRouter();
+  const [events, setEvents] = useState<any[]>([]); // State to hold events
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<any>(null); //event details for modal
+  const [selectedEvent, setSelectedEvent] = useState<any>(null); // Event details for modal
 
   const openModal = (event: any) => {
     setSelectedEvent(event);
@@ -81,6 +32,21 @@ export default function Events() {
     setSelectedEvent(null);
   };
 
+  // Fetch events from the backend
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/get_events"); // NEED TO CHANGE THIS URL
+        const data = await response.json();
+        setEvents(data);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
   return (
     <>
       {isLoggedIn ? (
@@ -89,14 +55,14 @@ export default function Events() {
         <Header />
       )}
 
-      <div className="min-h-screen pt-32 p-8 bg-background text-foreground"> 
+      <div className={`min-h-screen pt-32 p-8 bg-background text-foreground ${nunito.className}`}> 
         <div className="max-w-7xl mx-auto space-y-12">
           {/* Section Title */}
           <div className="text-center">
-            <h1 className="text-4xl font-semibold text-primary mb-4">
+            <h1 className={`text-4xl font-semibold text-primary mb-4`}>
               Upcoming Events
             </h1>
-            <p className="text-lg max-w-2xl mx-auto mb-12">
+            <p className={`text-lg max-w-2xl mx-auto mb-12`}>
               Check out the upcoming events at Boston University where you can donate or claim free food!
             </p>
           </div>
