@@ -38,13 +38,12 @@ export default function Login() {
       });
 
       const data = await response.json();
-      console.log(data);
 
       if (response.ok) {
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("user_type", data.role);
-
         login(data.role);
+
         router.push("/");
       } else {
         setError(data.msg || "Something went wrong");

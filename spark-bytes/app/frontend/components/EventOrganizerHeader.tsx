@@ -15,6 +15,11 @@ const nunito = Nunito({
 export default function EventOrganizerHeader() {
   const { isLoggedIn, logout } = useUser(); // Get isLoggedIn and logout from UserContext
 
+  const handleLogout = () => {
+    logout(); // Call the logout function from context
+    router.push('/'); // Navigate to the home page
+  };
+
   return (
     <Navbar shouldHideOnScroll className="absolute top-0 right-0 w-full z-10 p-4">
       <NavbarBrand className="ml-4 font-nunito font-semibold">
@@ -38,15 +43,10 @@ export default function EventOrganizerHeader() {
             manage events
           </Link>
         </NavbarItem>
-        <NavbarItem>
-          <Link href="/frontend/pages/login" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
-            login
-          </Link>
-        </NavbarItem>
         {isLoggedIn && ( // Show logout button only if logged in
           <NavbarItem>
             <button 
-              onClick={logout} 
+              onClick={handleLogout} // Use handleLogout to log out and navigate
               className="text-current hover:text-red-400 duration-300 font-nunito font-semibold"
             >
               logout

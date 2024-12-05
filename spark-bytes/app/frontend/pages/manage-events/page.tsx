@@ -5,12 +5,13 @@ import Header from "../../components/Header";
 import StudentHeader from "../../components/StudentHeader";
 import EventOrganizerHeader from "../../components/EventOrganizerHeader"; 
 import Foot from "../../components/Foot";
-import { Image, Button, Modal } from "@nextui-org/react";
+import { Image, Button, Modal, user } from "@nextui-org/react";
 
 import { Nunito } from 'next/font/google';
 
 import { useState, useEffect } from "react";
 import { useUser } from '../../context/UserContext'; 
+import { useRouter } from "next/navigation";
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -19,9 +20,19 @@ const nunito = Nunito({
 
 export default function ManageEvents() {
   const { isLoggedIn, userType } = useUser(); // Get user state from context
+  console.log("Is Logged In:", isLoggedIn);
+  console.log("User Type:", userType);
+  const router = useRouter();
   const [events, setEvents] = useState<any[]>([]); // State to hold events
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null); // Event details for modal
+
+  useEffect(() => {
+    if (!isLoggedIn || userType?.toLowerCase() !== 'event organiser') {
+        alert("You are not allowed to view this page.");
+        router.push('/');
+    }
+  }, [isLoggedIn, userType, router]);
 
   const openModal = (event: any) => {
     setSelectedEvent(event);
