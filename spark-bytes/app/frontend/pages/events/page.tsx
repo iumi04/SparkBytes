@@ -1,14 +1,14 @@
-"use client"; 
+'use client';
 
-import { useUser } from '../../context/UserContext'; // Import useUser
+import { useUser } from '../../context/UserContext'; 
 import Header from "../../components/Header";
-import StudentHeader from "../../components/StudentHeader"; // Import StudentHeader
-import EventOrganizerHeader from "../../components/EventOrganizerHeader"; // Import EventOrganizerHeader
+import StudentHeader from "../../components/StudentHeader";
+import EventOrganizerHeader from "../../components/EventOrganizerHeader"; 
 import Foot from "../../components/Foot";
-import { Image, Modal, Button, Input, Textarea } from "@nextui-org/react";
+import { Image, Button, Modal } from "@nextui-org/react";
 import { useState } from "react";
 import { Nunito } from 'next/font/google';
-import AddEvent from "../addevent/page";
+import { useRouter } from "next/navigation";
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -16,61 +16,69 @@ const nunito = Nunito({
 });
 
 export default function Events() {
-  const { isLoggedIn, userType } = useUser(); // Get user state from context
+  const { isLoggedIn, userType } = useUser(); //get user state from context
   const [events, setEvents] = useState([
     {
       id: 1,
       title: "Free Pizza Party",
       description: "Join us for a pizza party after the seminar! Leftover pizza will be available for pickup.",
       date: "2024-11-20",
-      location: "BU Seminar Hall"
+      location: "BU Seminar Hall",
+      details: "Join us at BU Seminar Hall to grab some leftover pizza after the seminar. The event will start right after the session ends."
     },
     {
       id: 2,
       title: "Lunch Donation from Tech Conference",
       description: "Leftover sandwiches and snacks from a tech conference. Grab your lunch here!",
       date: "2024-11-22",
-      location: "BU Conference Center"
+      location: "BU Conference Center",
+      details: "Come over to BU Conference Center and grab some leftover sandwiches and snacks from the recent tech conference!"
     },
     {
       id: 3,
       title: "Post-Event Dessert Grab",
       description: "Delicious desserts from the university event. Come get some free sweets!",
       date: "2024-11-25",
-      location: "BU Dining Hall"
+      location: "BU Dining Hall",
+      details: "Free desserts left after the university event. Come to BU Dining Hall for some sweet treats!"
+    },
+    {
+      id: 4,
+      title: "Afternoon Tea",
+      description: "Enjoy some leftover tea and snacks after the afternoon seminar.",
+      date: "2024-12-01",
+      location: "BU Tea Room",
+      details: "Come to the BU Tea Room and enjoy leftover tea and snacks after the seminar!"
+    },
+    {
+      id: 5,
+      title: "Healthy Snack Grab",
+      description: "Healthy snacks donated after a wellness seminar. Grab your bite!",
+      date: "2024-12-03",
+      location: "BU Wellness Center",
+      details: "Grab a quick snack after the wellness seminar at the BU Wellness Center!"
+    },
+    {
+      id: 6,
+      title: "Post-Conference Drinks",
+      description: "Leftover drinks from the recent conference. Come grab a refreshing beverage!",
+      date: "2024-12-05",
+      location: "BU Conference Center",
+      details: "Grab some leftover drinks from the recent BU conference, available at the BU Conference Center!"
     }
   ]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newEvent, setNewEvent] = useState({
-    title: "",
-    description: "",
-    date: "",
-    location: ""
-  });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setNewEvent(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null); // Event details for modal
+
+  const openModal = (event: any) => {
+    setSelectedEvent(event);
+    setIsModalOpen(true);
   };
 
-  const handleAddEvent = () => {
-    if (newEvent.title && newEvent.description && newEvent.date && newEvent.location) {
-      const newEventData = {
-        ...newEvent,
-        id: events.length + 1, 
-      };
-      setEvents([...events, newEventData]);
-      setIsModalOpen(false); 
-      setNewEvent({
-        title: "",
-        description: "",
-        date: "",
-        location: ""
-      }); 
-    }
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedEvent(null);
   };
 
   return (
@@ -80,111 +88,90 @@ export default function Events() {
       ) : (
         <Header />
       )}
-      <div className="flex items-center justify-center min-h-screen p-8 bg-background text-foreground">
-        <div className="flex flex-col w-full max-w-5xl space-y-12">
+
+      <div className="min-h-screen pt-32 p-8 bg-background text-foreground"> 
+        <div className="max-w-7xl mx-auto space-y-12">
           {/* Section Title */}
           <div className="text-center">
             <h1 className="text-4xl font-semibold text-primary mb-4">
               Upcoming Events
             </h1>
-            <p className="text-lg max-w-2xl mx-auto">
+            <p className="text-lg max-w-2xl mx-auto mb-12">
               Check out the upcoming events at Boston University where you can donate or claim free food!
             </p>
           </div>
 
-          {/* Add Event Button */}
-          <Button 
-            as="a" // Use 'as' prop to render as an anchor tag
-            href="/frontend/pages/addevent" 
-            className="padding: 10px 20px; font-size: 16px; cursor: pointer;"
-          >
-            Add Event
-          </Button>
+          {/* Add Event Button for Event Organizers Only */}
+          {userType === 'event_organiser' && (
+            <div className="text-center mb-8">
+              <Button 
+                as="a"
+                href="/frontend/pages/addevent" 
+                color="primary" 
+                className="text-lg py-2 px-6 rounded-full"
+              >
+                Add Event
+              </Button>
+            </div>
+          )}
 
-
-          {/* Events List */}
-          <div className="space-y-8">
+          {/* Events Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {events.map((event) => (
-              <div key={event.id} className="bg-gray-800 bg-opacity-80 p-6 rounded-2xl shadow-lg backdrop-blur-md">
-                <div className="flex flex-col lg:flex-row items-center gap-6">
-                  <div className="flex-1">
-                    <Image
-                      className="dark:invert rounded-lg object-cover object-center"
-                      src="/spark_bytes.jpeg" 
-                      alt={event.title}
-                      width="100%"
-                      height="auto"
-                    />
-                  </div>
-                  <div className="flex-1 text-center lg:text-left">
-                    <h2 className="text-3xl font-semibold text-primary mb-2">{event.title}</h2>
-                    <p className="text-lg mb-4">{event.description}</p>
-                    <p className="text-sm text-gray-400 mb-2">Date: {event.date}</p>
-                    <p className="text-sm text-gray-400 mb-4">Location: {event.location}</p>
-                    <a
-                      href={`/event/${event.id}`} 
-                      className="bg-blue-500 text-white py-2 px-6 rounded-full text-lg hover:bg-blue-600 transition duration-300"
-                    >
-                      Claim Food
-                    </a>
-                  </div>
+              <div key={event.id} className="bg-gray-800 bg-opacity-80 p-6 rounded-2xl shadow-lg backdrop-blur-md flex flex-col h-auto">
+                <div className="flex-1 mb-4">
+                  <Image
+                    className="dark:invert rounded-lg object-cover object-center"
+                    src="/spark_bytes.jpeg" 
+                    alt={event.title}
+                    width="100%"
+                    height="150px" //change img h here btw
+                  />
+                </div>
+                <div className="flex-1 text-center lg:text-left mb-4">
+                  <h2 className="text-2xl font-semibold text-primary mb-2">{event.title}</h2>
+                  <p className="text-lg mb-4">{event.description}</p>
+                  <p className="text-sm text-gray-400 mb-2">Date: {event.date}</p>
+                  <p className="text-sm text-gray-400 mb-4">Location: {event.location}</p>
+                </div>
+                <div className="flex justify-between mt-auto">
+                  <a
+                    href={`/event/${event.id}`} 
+                    className="bg-blue-500 text-white py-2 px-6 rounded-full text-lg hover:bg-blue-600 transition duration-300"
+                  >
+                    Claim Food
+                  </a>
+                  <Button
+                    className="bg-green-500 text-white py-2 px-6 rounded-full text-lg hover:bg-green-600 transition duration-300"
+                    onClick={() => openModal(event)}
+                  >
+                    View Event Details
+                  </Button>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </div>
-      { /* 
-      {/* Modal for Adding Event *}
-      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <Modal.Header>
-          <h3>Add New Event</h3>
-        </Modal.Header>
-        <Modal.Body>
-          <Input
-            fullWidth
-            label="Event Title"
-            name="title"
-            value={newEvent.title}
-            onChange={handleInputChange}
-          />
-          <Textarea
-            fullWidth
-            label="Description"
-            name="description"
-            value={newEvent.description}
-            onChange={handleInputChange}
-            rows={4}
-            className="mt-4"
-          />
-          <Input
-            fullWidth
-            label="Date"
-            name="date"
-            type="date"
-            value={newEvent.date}
-            onChange={handleInputChange}
-            className="mt-4"
-          />
-          <Input
-            fullWidth
-            label="Location"
-            name="location"
-            value={newEvent.location}
-            onChange={handleInputChange}
-            className="mt-4"
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button auto flat color="error" onClick={() => setIsModalOpen(false)}>
-            Close
-          </Button>
-          <Button auto onClick={handleAddEvent}>
-            Add Event
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      */}
+
+      {/* Modal for Event Details */}
+      {selectedEvent && (
+        <Modal open={isModalOpen} onClose={closeModal}>
+          <Modal.Header>
+            <h3>{selectedEvent.title}</h3>
+          </Modal.Header>
+          <Modal.Body>
+            <p><strong>Date:</strong> {selectedEvent.date}</p>
+            <p><strong>Location:</strong> {selectedEvent.location}</p>
+            <p>{selectedEvent.details}</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button auto flat color="error" onClick={closeModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
 
       <Foot />
     </>
