@@ -26,8 +26,8 @@ const mockEvents = [
     date: "2024-12-01T00:00:00Z",
     description: "This is the first sample event description.",
     location: "Sample Location 1",
-    area: "Sample Area 1",
-    tags: ["tag1", "tag2"],
+    area: "South",
+    tags: ["Vegan", "Gluten Free"],
     image_url: "https://example.com/sample-image1.jpg",
   },
   {
@@ -36,8 +36,8 @@ const mockEvents = [
     date: "2024-12-02T00:00:00Z",
     description: "This is the second sample event description.",
     location: "Sample Location 2",
-    area: "Sample Area 2",
-    tags: ["tag3", "tag4"],
+    area: "West",
+    tags: ["Dairy Free"],
     image_url: "https://example.com/sample-image2.jpg",
   },
   {
@@ -46,8 +46,8 @@ const mockEvents = [
     date: "2024-12-03T00:00:00Z",
     description: "This is the third sample event description.",
     location: "Sample Location 3",
-    area: "Sample Area 3",
-    tags: ["tag5", "tag6"],
+    area: "East",
+    tags: ["Nut Free", "Seafood"],
     image_url: "https://example.com/sample-image3.jpg",
   },
   {
@@ -56,8 +56,8 @@ const mockEvents = [
     date: "2024-12-04T00:00:00Z",
     description: "This is the fourth sample event description.",
     location: "Sample Location 4",
-    area: "Sample Area 4",
-    tags: ["tag7", "tag8"],
+    area: "Central",
+    tags: ["Meat", "Vegan"],
     image_url: "https://example.com/sample-image4.jpg",
   },
   {
@@ -66,8 +66,8 @@ const mockEvents = [
     date: "2024-12-05T00:00:00Z",
     description: "This is the fifth sample event description.",
     location: "Sample Location 5",
-    area: "Sample Area 5",
-    tags: ["tag9", "tag10"],
+    area: "South",
+    tags: [],
     image_url: "https://example.com/sample-image5.jpg",
   },
   {
@@ -76,8 +76,8 @@ const mockEvents = [
     date: "2024-12-06T00:00:00Z",
     description: "This is the sixth sample event description.",
     location: "Sample Location 6",
-    area: "Sample Area 6",
-    tags: ["tag11", "tag12"],
+    area: "West",
+    tags: ["Gluten Free", "Seafood"],
     image_url: "https://example.com/sample-image6.jpg",
   },
   {
@@ -86,8 +86,8 @@ const mockEvents = [
     date: "2024-12-07T00:00:00Z",
     description: "This is the seventh sample event description.",
     location: "Sample Location 7",
-    area: "Sample Area 7",
-    tags: ["tag13", "tag14"],
+    area: "East",
+    tags: ["Vegan", "Dairy Free"],
     image_url: "https://example.com/sample-image7.jpg",
   },
   {
@@ -96,8 +96,8 @@ const mockEvents = [
     date: "2024-12-08T00:00:00Z",
     description: "This is the eighth sample event description.",
     location: "Sample Location 8",
-    area: "Sample Area 8",
-    tags: ["tag15", "tag16"],
+    area: "Central",
+    tags: ["Nut Free"],
     image_url: "https://example.com/sample-image8.jpg",
   },
   {
@@ -106,8 +106,8 @@ const mockEvents = [
     date: "2024-12-09T00:00:00Z",
     description: "This is the ninth sample event description.",
     location: "Sample Location 9",
-    area: "Sample Area 9",
-    tags: ["tag17", "tag18"],
+    area: "South",
+    tags: ["Meat", "Gluten Free"],
     image_url: "https://example.com/sample-image9.jpg",
   },
 ];
@@ -117,23 +117,11 @@ export default function Events() {
   const router = useRouter();
   const [events, setEvents] = useState<any[]>(mockEvents); // Initialize with mock events
   const [isLoading, setIsLoading] = useState(true); // Loading state
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
   // Filter states
-  const [selectedLocation, setSelectedLocation] = useState<string>('');
+  const [selectedArea, setSelectedArea] = useState<string>('');
   const [selectedFoodPreferences, setSelectedFoodPreferences] = useState<string[]>([]);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
-
-  const openModal = (event: any) => {
-    setSelectedEvent(event);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedEvent(null);
-  };
 
   //NEED TO UPDATE THIS TO FETCH FROM THE DATABASE LAER ON
   useEffect(() => {
@@ -151,15 +139,15 @@ export default function Events() {
 
   //apply filters to events
   const filteredEvents = events.filter((event) => {
-    //filter by location
-    const locationMatch = selectedLocation ? event.location === selectedLocation : true;
+    //filter by area
+    const areaMatch = selectedArea ? event.area === selectedArea : true;
 
     //filter by food preferences
     const foodPreferenceMatch = selectedFoodPreferences.length
-      ? selectedFoodPreferences.every((preference) => event.foodPreferences.includes(preference))
+      ? selectedFoodPreferences.every((preference) => event.tags.includes(preference))
       : true;
 
-    return locationMatch && foodPreferenceMatch;
+    return areaMatch && foodPreferenceMatch;
   });
 
   const [currentPage, setCurrentPage] = useState(1); //state for current page
@@ -168,10 +156,10 @@ export default function Events() {
   //calculate the index of the first and last event on the current page
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
-  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent); // Get current events
+  const currentEvents = filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent); // Get current events
 
   //calculate total pages
-  const totalPages = Math.ceil(events.length / eventsPerPage);
+  const totalPages = Math.ceil(filteredEvents.length / eventsPerPage);
 
   // Handler for page change
   const handlePageChange = (page: number) => {
@@ -205,7 +193,7 @@ export default function Events() {
               className="text-lg py-2 px-6 rounded-full mr-8 flex items-center"
             >
               Filter
-              <IoIosArrowDown className="ml-2 text-lg" />
+              <IoIosArrowDown />
             </Button>
 
             {/* Dropdowns for Location and Food Preferences */}
@@ -215,13 +203,13 @@ export default function Events() {
                 <div className="grid grid-cols-2 gap-4">
                   {/* Location Dropdown */}
                   <div>
-                    <p className="font-bold mb-2">Location</p>
+                    <p className="font-bold mb-2">Area</p>
                     <select
-                      value={selectedLocation}
-                      onChange={(e) => setSelectedLocation(e.target.value)}
+                      value={selectedArea}
+                      onChange={(e) => setSelectedArea(e.target.value)}
                       className="w-full p-2 border border-gray-300 rounded-md bg-gray-800 text-white"
                     >
-                      <option value="">Select Location</option>
+                      <option value="">Select Area</option>
                       <option value="East">East</option>
                       <option value="West">West</option>
                       <option value="South">South</option>
@@ -233,84 +221,21 @@ export default function Events() {
                   <div>
                     <p className="font-bold mb-2">Food Preferences</p>
                     <div className="space-y-2">
-                      <label className="block">
-                        <input
-                          type="checkbox"
-                          value="Vegan"
-                          onChange={(e) => {
-                            const checked = e.target.checked;
-                            setSelectedFoodPreferences((prev) =>
-                              checked ? [...prev, "Vegan"] : prev.filter((p) => p !== "Vegan")
-                            );
-                          }}
-                        />
-                        Vegan
-                      </label>
-                      <label className="block">
-                        <input
-                          type="checkbox"
-                          value="Dairy Free"
-                          onChange={(e) => {
-                            const checked = e.target.checked;
-                            setSelectedFoodPreferences((prev) =>
-                              checked ? [...prev, "Dairy Free"] : prev.filter((p) => p !== "Dairy Free")
-                            );
-                          }}
-                        />
-                        Dairy Free
-                      </label>
-                      <label className="block">
-                        <input
-                          type="checkbox"
-                          value="Nut Free"
-                          onChange={(e) => {
-                            const checked = e.target.checked;
-                            setSelectedFoodPreferences((prev) =>
-                              checked ? [...prev, "Nut Free"] : prev.filter((p) => p !== "Nut Free")
-                            );
-                          }}
-                        />
-                        Nut Free
-                      </label>
-                      <label className="block">
-                        <input
-                          type="checkbox"
-                          value="Gluten Free"
-                          onChange={(e) => {
-                            const checked = e.target.checked;
-                            setSelectedFoodPreferences((prev) =>
-                              checked ? [...prev, "Gluten Free"] : prev.filter((p) => p !== "Gluten Free")
-                            );
-                          }}
-                        />
-                        Gluten Free
-                      </label>
-                      <label className="block">
-                        <input
-                          type="checkbox"
-                          value="Seafood"
-                          onChange={(e) => {
-                            const checked = e.target.checked;
-                            setSelectedFoodPreferences((prev) =>
-                              checked ? [...prev, "Seafood"] : prev.filter((p) => p !== "Seafood")
-                            );
-                          }}
-                        />
-                        Seafood
-                      </label>
-                      <label className="block">
-                        <input
-                          type="checkbox"
-                          value="Meat"
-                          onChange={(e) => {
-                            const checked = e.target.checked;
-                            setSelectedFoodPreferences((prev) =>
-                              checked ? [...prev, "Meat"] : prev.filter((p) => p !== "Meat")
-                            );
-                          }}
-                        />
-                        Meat
-                      </label>
+                      {["Vegan", "Dairy Free", "Nut Free", "Gluten Free", "Seafood", "Meat"].map((preference) => (
+                        <label className="block" key={preference}>
+                          <input
+                            type="checkbox"
+                            value={preference}
+                            onChange={(e) => {
+                              const checked = e.target.checked;
+                              setSelectedFoodPreferences((prev) =>
+                                checked ? [...prev, preference] : prev.filter((p) => p !== preference)
+                              );
+                            }}
+                          />
+                          {preference}
+                        </label>
+                      ))}
                     </div>
                   </div>
                 </div>
