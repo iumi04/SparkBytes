@@ -11,7 +11,6 @@ import { Nunito } from 'next/font/google';
 import { useRouter } from "next/navigation";
 import { IoIosArrowDown } from 'react-icons/io'; // Importing the arrow icon from react-icons
 import EventCard from '../../components/EventCard';
-import axios from 'axios'; // Import axios for making HTTP requests
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -246,7 +245,7 @@ export default function Events() {
           {/* Loading Animation or Events Grid */}
           {isLoading ? (
             <div className="flex justify-center items-center h-64"> {/* Center the spinner */}
-              <Spinner size="xl" /> {/* Display the loading spinner */}
+              <Spinner size="lg" /> {/* Display the loading spinner */}
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
