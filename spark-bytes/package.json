@@ -13,7 +13,7 @@
     "@emotion/styled": "^11.13.0",
     "@nextui-org/input": "^2.2.5",
     "@nextui-org/navbar": "^2.0.37",
-    "@nextui-org/react": "^2.4.8",
+    "@nextui-org/react": "^2.6.5",
     "flask": "^0.2.10",
     "next": "^15.0.2",
     "react": "^18.3.1",

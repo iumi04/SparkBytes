@@ -5,22 +5,117 @@ import Header from "../../components/Header";
 import StudentHeader from "../../components/StudentHeader";
 import EventOrganizerHeader from "../../components/EventOrganizerHeader"; 
 import Foot from "../../components/Foot";
-import { Image, Button, Modal, Spinner } from "@nextui-org/react";
+import { Image, Button, Modal, Spinner, Pagination } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { Nunito } from 'next/font/google';
 import { useRouter } from "next/navigation";
 import { IoIosArrowDown } from 'react-icons/io'; // Importing the arrow icon from react-icons
 import EventCard from '../../components/EventCard';
+import axios from 'axios'; // Import axios for making HTTP requests
 
 const nunito = Nunito({
   subsets: ['latin'],
   weight: ['400', '700'],
 });
 
+// Mock events for testing
+const mockEvents = [
+  {
+    id: 1,
+    title: "Sample Event 1",
+    date: "2024-12-01T00:00:00Z",
+    description: "This is the first sample event description.",
+    location: "Sample Location 1",
+    area: "Sample Area 1",
+    tags: ["tag1", "tag2"],
+    image_url: "https://example.com/sample-image1.jpg",
+  },
+  {
+    id: 2,
+    title: "Sample Event 2",
+    date: "2024-12-02T00:00:00Z",
+    description: "This is the second sample event description.",
+    location: "Sample Location 2",
+    area: "Sample Area 2",
+    tags: ["tag3", "tag4"],
+    image_url: "https://example.com/sample-image2.jpg",
+  },
+  {
+    id: 3,
+    title: "Sample Event 3",
+    date: "2024-12-03T00:00:00Z",
+    description: "This is the third sample event description.",
+    location: "Sample Location 3",
+    area: "Sample Area 3",
+    tags: ["tag5", "tag6"],
+    image_url: "https://example.com/sample-image3.jpg",
+  },
+  {
+    id: 4,
+    title: "Sample Event 4",
+    date: "2024-12-04T00:00:00Z",
+    description: "This is the fourth sample event description.",
+    location: "Sample Location 4",
+    area: "Sample Area 4",
+    tags: ["tag7", "tag8"],
+    image_url: "https://example.com/sample-image4.jpg",
+  },
+  {
+    id: 5,
+    title: "Sample Event 5",
+    date: "2024-12-05T00:00:00Z",
+    description: "This is the fifth sample event description.",
+    location: "Sample Location 5",
+    area: "Sample Area 5",
+    tags: ["tag9", "tag10"],
+    image_url: "https://example.com/sample-image5.jpg",
+  },
+  {
+    id: 6,
+    title: "Sample Event 6",
+    date: "2024-12-06T00:00:00Z",
+    description: "This is the sixth sample event description.",
+    location: "Sample Location 6",
+    area: "Sample Area 6",
+    tags: ["tag11", "tag12"],
+    image_url: "https://example.com/sample-image6.jpg",
+  },
+  {
+    id: 7,
+    title: "Sample Event 7",
+    date: "2024-12-07T00:00:00Z",
+    description: "This is the seventh sample event description.",
+    location: "Sample Location 7",
+    area: "Sample Area 7",
+    tags: ["tag13", "tag14"],
+    image_url: "https://example.com/sample-image7.jpg",
+  },
+  {
+    id: 8,
+    title: "Sample Event 8",
+    date: "2024-12-08T00:00:00Z",
+    description: "This is the eighth sample event description.",
+    location: "Sample Location 8",
+    area: "Sample Area 8",
+    tags: ["tag15", "tag16"],
+    image_url: "https://example.com/sample-image8.jpg",
+  },
+  {
+    id: 9,
+    title: "Sample Event 9",
+    date: "2024-12-09T00:00:00Z",
+    description: "This is the ninth sample event description.",
+    location: "Sample Location 9",
+    area: "Sample Area 9",
+    tags: ["tag17", "tag18"],
+    image_url: "https://example.com/sample-image9.jpg",
+  },
+];
+
 export default function Events() {
   const { isLoggedIn, userType } = useUser();
   const router = useRouter();
-  const [events, setEvents] = useState<any[]>([]); // Initialize as empty array
+  const [events, setEvents] = useState<any[]>(mockEvents); // Initialize with mock events
   const [isLoading, setIsLoading] = useState(true); // Loading state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
@@ -29,40 +124,6 @@ export default function Events() {
   const [selectedLocation, setSelectedLocation] = useState<string>('');
   const [selectedFoodPreferences, setSelectedFoodPreferences] = useState<string[]>([]);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
-
-  // Mock events for testing
-  const mockEvents = [
-    {
-      id: 1,
-      title: "Sample Event 1",
-      date: "2024-12-01T00:00:00Z",
-      description: "This is the first sample event description.",
-      location: "Sample Location 1",
-      area: "Sample Area 1",
-      tags: ["tag1", "tag2"],
-      image_url: "https://example.com/sample-image1.jpg",
-    },
-    {
-      id: 2,
-      title: "Sample Event 2",
-      date: "2024-12-15T00:00:00Z",
-      description: "This is the second sample event description.",
-      location: "Sample Location 2",
-      area: "Sample Area 2",
-      tags: ["tag3", "tag4"],
-      image_url: "https://example.com/sample-image2.jpg",
-    },
-    {
-      id: 3,
-      title: "Sample Event 3",
-      date: "2024-12-15T00:00:00Z",
-      description: "This is the third sample event description.",
-      location: "Sample Location 3",
-      area: "Sample Area 3",
-      tags: ["tag3", "tag4"],
-      image_url: "https://example.com/sample-image2.jpg",
-    },
-  ];
 
   const openModal = (event: any) => {
     setSelectedEvent(event);
@@ -88,18 +149,34 @@ export default function Events() {
     fetchEvents();
   }, []);
 
-  // Apply filters to events
+  //apply filters to events
   const filteredEvents = events.filter((event) => {
-    // Filter by location
+    //filter by location
     const locationMatch = selectedLocation ? event.location === selectedLocation : true;
 
-    // Filter by food preferences
+    //filter by food preferences
     const foodPreferenceMatch = selectedFoodPreferences.length
       ? selectedFoodPreferences.every((preference) => event.foodPreferences.includes(preference))
       : true;
 
     return locationMatch && foodPreferenceMatch;
   });
+
+  const [currentPage, setCurrentPage] = useState(1); //state for current page
+  const eventsPerPage = 3; //number of events per page
+
+  //calculate the index of the first and last event on the current page
+  const indexOfLastEvent = currentPage * eventsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent); // Get current events
+
+  //calculate total pages
+  const totalPages = Math.ceil(events.length / eventsPerPage);
+
+  // Handler for page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page); // Update the current page
+  };
 
   return (
     <>
@@ -248,32 +325,24 @@ export default function Events() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
-              {events.map((event) => (
-                <EventCard key={event.id} event={event} router={router} /> // Pass router as a prop
+              {currentEvents.map((event) => (
+                <EventCard key={event.id} event={event} router={router} />
               ))}
             </div>
           )}
+
+          {/* Pagination Controls */}
+          <div className="flex justify-center mt-8">
+            <Pagination
+              showShadow
+              showControls // Show pagination controls
+              total={totalPages} // Total number of pages
+              data-active-page={currentPage} // Current active page
+              onChange={handlePageChange} // Update current page on change
+            />
+          </div>
         </div>
       </div>
-
-      {/* Modal for Event Details */}
-      {selectedEvent && (
-        <Modal open={isModalOpen} onClose={closeModal}>
-          <Modal.Header>
-            <h3>{selectedEvent.title}</h3>
-          </Modal.Header>
-          <Modal.Body>
-            <p><strong>Date:</strong> {selectedEvent.date}</p>
-            <p><strong>Location:</strong> {selectedEvent.location}</p>
-            <p>{selectedEvent.details}</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button auto flat color="error" onClick={closeModal}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      )}
 
       <Foot />
     </>

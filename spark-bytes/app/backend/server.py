@@ -130,12 +130,21 @@ def get_events():
 
         events_list = []
         for event in events:
-            event["_id"] = str(event["_id"])
-            events_list.append(event)
+            event_data = {
+                "id": str(event["_id"]),  # Map MongoDB ObjectId to id
+                "title": event.get("title"),
+                "description": event.get("description"),
+                "date": event.get("date"),
+                "location": event.get("location"),
+                "area": event.get("area"),
+                "tags": event.get("tags", []),  # Default to empty array if no tags
+                "image_url": event.get("image_url"),
+            }
+            events_list.append(event_data)
 
         return jsonify(events_list), 200
     except Exception as e:
-        return jsonify({"msg":"Error retrieving events", "error": str(e)}), 500
+        return jsonify({"msg": "Error retrieving events", "error": str(e)}), 500
 
 
 if __name__ == "__main__":
