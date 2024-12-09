@@ -4,7 +4,7 @@ import { useUser } from '../../context/UserContext'; // Import useUser
 import Header from "../../components/Header";
 import StudentHeader from "../../components/StudentHeader"; // Import StudentHeader
 import EventOrganizerHeader from "../../components/EventOrganizerHeader"; // Import EventOrganizerHeader
-import '../globals.css';
+import '../../../globals.css';
 import { Image } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';
 import Foot from "../../components/Foot";
@@ -65,7 +65,7 @@ export default function Developers() {
                 <div className="p-2 mt-2 rounded-2xl bg-gradient-to-r from-white/10 to-gray-300">
                   <div className="text-black bg-white rounded-2xl shadow-lg backdrop-blur-md p-4">
                     <p><b>Role:</b> Backend Developer</p>
-                    <p><b>Bio:</b> Aiden is passionate about data and APIs. She specializes in building efficient server-side applications.</p>
+                    <p><b>Bio:</b> Aiden is passionate about data and APIs. He is passionate in building impactful solutions, and is a fan of the NBA.</p>
                   </div>
                 </div>
               </div>
