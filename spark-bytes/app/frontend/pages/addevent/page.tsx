@@ -2,7 +2,7 @@
 
 import Header from "../../components/Header";
 import Foot from "../../components/Foot";
-import { Input, Textarea, Button, Checkbox } from "@nextui-org/react";
+import { Input, Textarea, Button, Checkbox, Radio, RadioGroup } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Nunito } from 'next/font/google'; 
@@ -28,6 +28,7 @@ export default function AddEvent() {
     endTime:"",
     location: "",
     tags: [],
+    area: "",
   });
 
   const tagOptions = [
@@ -81,6 +82,14 @@ export default function AddEvent() {
     });
   };
 
+  const handleAreaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const {value} = e.target
+    setNewEvent((prevState) => ({
+      ...prevState,
+      area: value,
+    }));
+  };
+
   const handleSubmit = () => {
     if (
       newEvent.title &&
@@ -89,7 +98,8 @@ export default function AddEvent() {
       newEvent.startTime &&
       newEvent.endTime &&
       newEvent.location &&
-      newEvent.tags.length > 0
+      newEvent.tags.length > 0 &&
+      newEvent.area
     ) {
       console.log("New Event Created:", newEvent);
       alert("Event successfully created!");
@@ -168,6 +178,29 @@ export default function AddEvent() {
               onChange={handleInputChange}
               placeholder="Enter event location"
             />
+            <div className="space-y-4">
+              {/* Dropdown for Area Selection */}
+              <div>
+                <label htmlFor="area" className="text-lg font-medium text-primary">
+                  Select The Event Area:
+                </label>
+                <select
+                  id="area"
+                  name="area"
+                  value={newEvent.area}
+                  onChange={handleAreaChange}
+                  className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded"
+                >
+                  <option value="" disabled>
+                    Select the area on campus
+                  </option>
+                  <option value="South">South</option>
+                  <option value="Central">Central</option>
+                  <option value="East">East</option>
+                  <option value="West">West</option>
+                </select>
+              </div>
+            </div>
             <div>
               <h1 className="text-lg font-medium text-primary">Event Tags:</h1>
               <div className="grid grid-cols-2 gap-2 mt-2">
