@@ -5,6 +5,7 @@ import certifi
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from flask_cors import CORS
 import re
+import os
 
 app = Flask(__name__)
 
@@ -122,7 +123,7 @@ def get_login():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-"get all events"
+ # "get all events"
 @app.route("/get_events", methods=["GET"])
 def get_events():
     try:
@@ -131,13 +132,13 @@ def get_events():
         events_list = []
         for event in events:
             event_data = {
-                "id": str(event["_id"]),  # Map MongoDB ObjectId to id
+                "id": str(event["_id"]),  
                 "title": event.get("title"),
                 "description": event.get("description"),
                 "date": event.get("date"),
                 "location": event.get("location"),
                 "area": event.get("area"),
-                "tags": event.get("tags", []),  # Default to empty array if no tags
+                "tags": event.get("tags", []),  #
                 "image_url": event.get("image_url"),
             }
             events_list.append(event_data)
@@ -145,6 +146,59 @@ def get_events():
         return jsonify(events_list), 200
     except Exception as e:
         return jsonify({"msg": "Error retrieving events", "error": str(e)}), 500
+
+
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+@app.route("/events", methods=["POST"])
+def create_event():
+    try:
+        data = request.form.to_dict()
+        image_file = request.files.get("image") 
+
+        required_fields = [
+            "title", "description", "date", "startTime", "endTime", "location", "tags", "area"
+        ]
+
+
+        missing_fields = [field for field in required_fields if field not in data]
+        if missing_fields:
+            return jsonify({
+                "msg": "Missing some required fields",
+                "missing_fields": missing_fields  
+            }), 400
+
+        image_path = None
+        if image_file:
+            filename = image_file.filename
+            image_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            image_file.save(image_path) 
+
+        event = {
+            "title": data["title"],
+            "description": data["description"],
+            "date": data["date"],
+            "startTime": data["startTime"],
+            "endTime": data["endTime"],
+            "location": data["location"],
+            "tags": data["tags"].split(","), 
+            "area": data["area"],
+        }
+
+        if image_path:
+            event["image"] = image_path
+
+        result = events_collection.insert_one(event)
+
+        event["_id"] = str(result.inserted_id)
+
+        return jsonify({"msg": "Event created successfully", "event": event}), 201
+
+    except Exception as e:
+        print("Error occurred:", e)
+        return jsonify({"msg": "Internal Server Error"}), 500
 
 
 if __name__ == "__main__":

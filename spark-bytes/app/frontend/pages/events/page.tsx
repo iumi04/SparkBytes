@@ -9,7 +9,7 @@ import { Image, Button, Modal, Spinner, Pagination } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { Nunito } from 'next/font/google';
 import { useRouter } from "next/navigation";
-import { IoIosArrowDown } from 'react-icons/io'; // Importing the arrow icon from react-icons
+import { IoIosArrowDown } from 'react-icons/io'; 
 import EventCard from '../../components/EventCard';
 
 const nunito = Nunito({
@@ -114,10 +114,10 @@ const mockEvents = [
 export default function Events() {
   const { isLoggedIn, userType } = useUser();
   const router = useRouter();
-  const [events, setEvents] = useState<any[]>(mockEvents); // Initialize with mock events
-  const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [events, setEvents] = useState<any[]>([]); 
+  const [isLoading, setIsLoading] = useState(true); 
 
-  // Filter states
+
   const [selectedArea, setSelectedArea] = useState<string>('');
   const [selectedFoodPreferences, setSelectedFoodPreferences] = useState<string[]>([]);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -125,23 +125,38 @@ export default function Events() {
   //NEED TO UPDATE THIS TO FETCH FROM THE DATABASE LAER ON
   useEffect(() => {
     const fetchEvents = async () => {
-      setIsLoading(true); // Set loading to true before fetching
-      // Simulate fetching events
-      setTimeout(() => {
-        setEvents(mockEvents);
-        setIsLoading(false); // Set loading to false after fetching
-      }, 2000); // Simulate a 2-second loading time
+      setIsLoading(true);
+      try {
+        const response = await fetch("http://127.0.0.1:5000/get_events", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+  
+        if (response.ok) {
+          const eventsData = await response.json();
+          setEvents(eventsData); 
+        } else {
+          console.error("Failed to fetch events");
+        }
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      } finally {
+        setIsLoading(false); 
+      }
     };
-
+  
     fetchEvents();
   }, []);
+  
 
-  //apply filters to events
+
   const filteredEvents = events.filter((event) => {
-    //filter by area
+
     const areaMatch = selectedArea ? event.area === selectedArea : true;
 
-    //filter by food preferences
+
     const foodPreferenceMatch = selectedFoodPreferences.length
       ? selectedFoodPreferences.every((preference) => event.tags.includes(preference))
       : true;
@@ -149,20 +164,20 @@ export default function Events() {
     return areaMatch && foodPreferenceMatch;
   });
 
-  const [currentPage, setCurrentPage] = useState(1); //state for current page
-  const eventsPerPage = 9; //number of events per page
+  const [currentPage, setCurrentPage] = useState(1); 
+  const eventsPerPage = 9; 
 
-  //calculate the index of the first and last event on the current page
+
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
-  const currentEvents = filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent); // Get current events
+  const currentEvents = filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent); 
 
-  //calculate total pages
+
   const totalPages = Math.ceil(filteredEvents.length / eventsPerPage);
 
-  // Handler for page change
+
   const handlePageChange = (page: number) => {
-    setCurrentPage(page); // Update the current page
+    setCurrentPage(page); 
   };
 
   return (

@@ -42,7 +42,6 @@ export default function AddEvent() {
   ];
 
   useEffect(() => {
-    // Check user state and set loading to false after checking
     const checkUserState = () => {
       if (isLoggedIn !== null) {
         setLoading(false);
@@ -51,9 +50,7 @@ export default function AddEvent() {
     checkUserState();
   }, [isLoggedIn]);
 
-  // Check access after loading is complete
   useEffect(() => {
-    // Redirect to events page if the user is not an event organizer
     if (!loading) {
       if (!isLoggedIn || userType?.toLowerCase() !== 'event organiser') {
         router.push('/frontend/pages/events'); 
@@ -101,7 +98,7 @@ export default function AddEvent() {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (
       newEvent.title &&
       newEvent.description &&
@@ -112,13 +109,43 @@ export default function AddEvent() {
       newEvent.tags.length > 0 &&
       newEvent.area
     ) {
-      console.log("New Event Created:", newEvent);
-      alert("Event successfully created!");
-      router.push("/frontend/pages/events"); // Redirects back to events page
+      try {
+        const formData = new FormData();
+        Object.keys(newEvent).forEach((key) => {
+          if (key === "tags") {
+            formData.append(key, newEvent[key].join(","));
+          } else if (key === "image" && newEvent[key]) {
+            formData.append(key, newEvent[key]);
+          } else {
+            formData.append(key, newEvent[key]);
+          }
+        });
+  
+        const response = await fetch("http://127.0.0.1:5000/events", {
+          method: "POST",
+          body: formData, 
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          console.log("New Event Created:", result);
+  
+          alert("Event successfully created!");
+          router.push("/frontend/pages/events"); 
+        } else {
+          const error = await response.json();
+          alert(`Failed to create event: ${error.msg || "Unknown error"}`);
+        }
+      } catch (error) {
+        console.error("Error while creating event:", error);
+        alert("An error occurred while creating the event.");
+      }
     } else {
       alert("Please fill in all fields.");
     }
   };
+  
+  
 
   const renderHeader = () => {
     if (isLoggedIn) {
@@ -209,6 +236,7 @@ export default function AddEvent() {
                   <option value="Central">Central</option>
                   <option value="East">East</option>
                   <option value="West">West</option>
+                  <option value="Else">West</option>
                 </select>
               </div>
             </div>

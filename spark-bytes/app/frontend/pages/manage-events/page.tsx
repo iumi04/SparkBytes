@@ -16,11 +16,11 @@ const nunito = Nunito({
 });
 
 export default function ManageEvents() {
-  const { isLoggedIn, userType } = useUser(); // Get user state from context
+  const { isLoggedIn, userType } = useUser(); 
   const router = useRouter();
-  const [events, setEvents] = useState<any[]>([]); // State to hold events
+  const [events, setEvents] = useState<any[]>([]); 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<any>(null); // Event details for modal
+  const [selectedEvent, setSelectedEvent] = useState<any>(null); 
 
   useEffect(() => {
     if (!isLoggedIn || userType?.toLowerCase() !== 'event organiser') {
@@ -39,11 +39,10 @@ export default function ManageEvents() {
     setSelectedEvent(null);
   };
 
-  // Fetch events from the backend
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5000/get_events"); // Adjust the URL as needed
+        const response = await fetch("http://127.0.0.1:5000/get_events"); 
         const data = await response.json();
         setEvents(data);
       } catch (error) {
@@ -54,7 +53,6 @@ export default function ManageEvents() {
     fetchEvents();
   }, []);
 
-  // Render the appropriate header based on user type
   const renderHeader = () => {
     if (isLoggedIn) {
       return userType === 'student' ? <StudentHeader /> : <EventOrganizerHeader />;
