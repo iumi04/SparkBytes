@@ -43,6 +43,11 @@ export default function EventOrganizerHeader() {
             manage events
           </Link>
         </NavbarItem>
+        <NavbarItem>
+          <Link href="/frontend/pages/events" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+            events
+          </Link>
+        </NavbarItem>
         {isLoggedIn && ( // Show logout button only if logged in
           <NavbarItem>
             <button 

@@ -9,6 +9,7 @@ import { Image, Button, Modal } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { Nunito } from 'next/font/google';
 import { useRouter } from "next/navigation";
+import { IoIosArrowDown } from 'react-icons/io'; // Importing the arrow icon from react-icons
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -16,11 +17,16 @@ const nunito = Nunito({
 });
 
 export default function Events() {
-  const { isLoggedIn, userType } = useUser(); // Get user state from context
+  const { isLoggedIn, userType } = useUser();
   const router = useRouter();
-  const [events, setEvents] = useState<any[]>([]); // State to hold events
+  const [events, setEvents] = useState<any[]>([]); // Initialize as empty array
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<any>(null); // Event details for modal
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+
+  // Filter states
+  const [selectedLocation, setSelectedLocation] = useState<string>('');
+  const [selectedFoodPreferences, setSelectedFoodPreferences] = useState<string[]>([]);
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
 
   const openModal = (event: any) => {
     setSelectedEvent(event);
@@ -36,9 +42,15 @@ export default function Events() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5000/get_events"); // NEED TO CHANGE THIS URL
+        const response = await fetch("http://127.0.0.1:5000/get_events"); // Replace with actual URL
         const data = await response.json();
-        setEvents(data);
+
+        // Ensure the fetched data is an array
+        if (Array.isArray(data)) {
+          setEvents(data);
+        } else {
+          console.error("Fetched data is not an array:", data);
+        }
       } catch (error) {
         console.error("Error fetching events:", error);
       }
@@ -46,6 +58,19 @@ export default function Events() {
 
     fetchEvents();
   }, []);
+
+  // Apply filters to events
+  const filteredEvents = events.filter((event) => {
+    // Filter by location
+    const locationMatch = selectedLocation ? event.location === selectedLocation : true;
+
+    // Filter by food preferences
+    const foodPreferenceMatch = selectedFoodPreferences.length
+      ? selectedFoodPreferences.every((preference) => event.foodPreferences.includes(preference))
+      : true;
+
+    return locationMatch && foodPreferenceMatch;
+  });
 
   return (
     <>
@@ -55,35 +80,141 @@ export default function Events() {
         <Header />
       )}
 
-      <div className={`min-h-screen pt-32 p-8 bg-background text-foreground ${nunito.className}`}> 
+      <div className={`min-h-screen pt-32 p-8 bg-background text-foreground ${nunito.className}`}>
         <div className="max-w-7xl mx-auto space-y-12">
           {/* Section Title */}
           <div className="text-center">
-            <h1 className={`text-4xl font-semibold text-primary mb-4`}>
-              Upcoming Events
-            </h1>
+            <h1 className={`text-4xl font-semibold text-primary mb-4`}>Upcoming Events</h1>
             <p className={`text-lg max-w-2xl mx-auto mb-12`}>
               Check out the upcoming events at Boston University where you can donate or claim free food!
             </p>
           </div>
 
-          {/* Add Event Button for Event Organizers Only */}
-          {userType === 'event_organiser' && (
-            <div className="text-center mb-8">
-              <Button 
-                as="a"
-                href="/frontend/pages/addevent" 
-                color="primary" 
-                className="text-lg py-2 px-6 rounded-full"
-              >
-                Add Event
-              </Button>
-            </div>
-          )}
+          {/* Filter Section */}
+          <div className="flex justify-start mb-8">
+            {/* Filter Button with Arrow */}
+            <Button
+              onClick={() => setIsFilterVisible(!isFilterVisible)}
+              color="primary"
+              className="text-lg py-2 px-6 rounded-full mr-8 flex items-center"
+            >
+              Filter
+              <IoIosArrowDown className="ml-2 text-lg" />
+            </Button>
+
+            {/* Dropdowns for Location and Food Preferences */}
+            {isFilterVisible && (
+              <div className="bg-black p-4 rounded-md shadow-md space-y-4 text-white w-[300px] mt-2">
+                {/* Container for both dropdowns in a row */}
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Location Dropdown */}
+                  <div>
+                    <p className="font-bold mb-2">Location</p>
+                    <select
+                      value={selectedLocation}
+                      onChange={(e) => setSelectedLocation(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-md bg-gray-800 text-white"
+                    >
+                      <option value="">Select Location</option>
+                      <option value="East">East</option>
+                      <option value="West">West</option>
+                      <option value="South">South</option>
+                      <option value="Central">Central</option>
+                    </select>
+                  </div>
+
+                  {/* Food Preferences Dropdown */}
+                  <div>
+                    <p className="font-bold mb-2">Food Preferences</p>
+                    <div className="space-y-2">
+                      <label className="block">
+                        <input
+                          type="checkbox"
+                          value="Vegan"
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setSelectedFoodPreferences((prev) =>
+                              checked ? [...prev, "Vegan"] : prev.filter((p) => p !== "Vegan")
+                            );
+                          }}
+                        />
+                        Vegan
+                      </label>
+                      <label className="block">
+                        <input
+                          type="checkbox"
+                          value="Dairy Free"
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setSelectedFoodPreferences((prev) =>
+                              checked ? [...prev, "Dairy Free"] : prev.filter((p) => p !== "Dairy Free")
+                            );
+                          }}
+                        />
+                        Dairy Free
+                      </label>
+                      <label className="block">
+                        <input
+                          type="checkbox"
+                          value="Nut Free"
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setSelectedFoodPreferences((prev) =>
+                              checked ? [...prev, "Nut Free"] : prev.filter((p) => p !== "Nut Free")
+                            );
+                          }}
+                        />
+                        Nut Free
+                      </label>
+                      <label className="block">
+                        <input
+                          type="checkbox"
+                          value="Gluten Free"
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setSelectedFoodPreferences((prev) =>
+                              checked ? [...prev, "Gluten Free"] : prev.filter((p) => p !== "Gluten Free")
+                            );
+                          }}
+                        />
+                        Gluten Free
+                      </label>
+                      <label className="block">
+                        <input
+                          type="checkbox"
+                          value="Seafood"
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setSelectedFoodPreferences((prev) =>
+                              checked ? [...prev, "Seafood"] : prev.filter((p) => p !== "Seafood")
+                            );
+                          }}
+                        />
+                        Seafood
+                      </label>
+                      <label className="block">
+                        <input
+                          type="checkbox"
+                          value="Meat"
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setSelectedFoodPreferences((prev) =>
+                              checked ? [...prev, "Meat"] : prev.filter((p) => p !== "Meat")
+                            );
+                          }}
+                        />
+                        Meat
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Events Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {events.map((event) => (
+            {filteredEvents.map((event) => (
               <div key={event.id} className="bg-gray-800 bg-opacity-80 p-6 rounded-2xl shadow-lg backdrop-blur-md flex flex-col h-auto">
                 <div className="flex-1 mb-4">
                   <Image
@@ -91,7 +222,7 @@ export default function Events() {
                     src="/spark_bytes.jpeg" 
                     alt={event.title}
                     width="100%"
-                    height="150px" //change img h here btw
+                    height="150px"
                   />
                 </div>
                 <div className="flex-1 text-center lg:text-left mb-4">
