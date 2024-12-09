@@ -5,11 +5,12 @@ import Header from "../../components/Header";
 import StudentHeader from "../../components/StudentHeader";
 import EventOrganizerHeader from "../../components/EventOrganizerHeader"; 
 import Foot from "../../components/Foot";
-import { Image, Button, Modal } from "@nextui-org/react";
+import { Image, Button, Modal, Spinner } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { Nunito } from 'next/font/google';
 import { useRouter } from "next/navigation";
 import { IoIosArrowDown } from 'react-icons/io'; // Importing the arrow icon from react-icons
+import EventCard from '../../components/EventCard';
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -20,6 +21,7 @@ export default function Events() {
   const { isLoggedIn, userType } = useUser();
   const router = useRouter();
   const [events, setEvents] = useState<any[]>([]); // Initialize as empty array
+  const [isLoading, setIsLoading] = useState(true); // Loading state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
@@ -27,6 +29,40 @@ export default function Events() {
   const [selectedLocation, setSelectedLocation] = useState<string>('');
   const [selectedFoodPreferences, setSelectedFoodPreferences] = useState<string[]>([]);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
+
+  // Mock events for testing
+  const mockEvents = [
+    {
+      id: 1,
+      title: "Sample Event 1",
+      date: "2024-12-01T00:00:00Z",
+      description: "This is the first sample event description.",
+      location: "Sample Location 1",
+      area: "Sample Area 1",
+      tags: ["tag1", "tag2"],
+      image_url: "https://example.com/sample-image1.jpg",
+    },
+    {
+      id: 2,
+      title: "Sample Event 2",
+      date: "2024-12-15T00:00:00Z",
+      description: "This is the second sample event description.",
+      location: "Sample Location 2",
+      area: "Sample Area 2",
+      tags: ["tag3", "tag4"],
+      image_url: "https://example.com/sample-image2.jpg",
+    },
+    {
+      id: 3,
+      title: "Sample Event 3",
+      date: "2024-12-15T00:00:00Z",
+      description: "This is the third sample event description.",
+      location: "Sample Location 3",
+      area: "Sample Area 3",
+      tags: ["tag3", "tag4"],
+      image_url: "https://example.com/sample-image2.jpg",
+    },
+  ];
 
   const openModal = (event: any) => {
     setSelectedEvent(event);
@@ -38,22 +74,15 @@ export default function Events() {
     setSelectedEvent(null);
   };
 
-  // Fetch events from the backend
+  //NEED TO UPDATE THIS TO FETCH FROM THE DATABASE LAER ON
   useEffect(() => {
     const fetchEvents = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:5000/get_events"); // Replace with actual URL
-        const data = await response.json();
-
-        // Ensure the fetched data is an array
-        if (Array.isArray(data)) {
-          setEvents(data);
-        } else {
-          console.error("Fetched data is not an array:", data);
-        }
-      } catch (error) {
-        console.error("Error fetching events:", error);
-      }
+      setIsLoading(true); // Set loading to true before fetching
+      // Simulate fetching events
+      setTimeout(() => {
+        setEvents(mockEvents);
+        setIsLoading(false); // Set loading to false after fetching
+      }, 2000); // Simulate a 2-second loading time
     };
 
     fetchEvents();
@@ -212,42 +241,18 @@ export default function Events() {
             )}
           </div>
 
-          {/* Events Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredEvents.map((event) => (
-              <div key={event.id} className="bg-gray-800 bg-opacity-80 p-6 rounded-2xl shadow-lg backdrop-blur-md flex flex-col h-auto">
-                <div className="flex-1 mb-4">
-                  <Image
-                    className="dark:invert rounded-lg object-cover object-center"
-                    src="/spark_bytes.jpeg" 
-                    alt={event.title}
-                    width="100%"
-                    height="150px"
-                  />
-                </div>
-                <div className="flex-1 text-center lg:text-left mb-4">
-                  <h2 className="text-2xl font-semibold text-primary mb-2">{event.title}</h2>
-                  <p className="text-lg mb-4">{event.description}</p>
-                  <p className="text-sm text-gray-400 mb-2">Date: {event.date}</p>
-                  <p className="text-sm text-gray-400 mb-4">Location: {event.location}</p>
-                </div>
-                <div className="flex justify-between mt-auto">
-                  <a
-                    href={`/event/${event.id}`} 
-                    className="bg-blue-500 text-white py-2 px-6 rounded-full text-lg hover:bg-blue-600 transition duration-300"
-                  >
-                    Claim Food
-                  </a>
-                  <Button
-                    className="bg-green-500 text-white py-2 px-6 rounded-full text-lg hover:bg-green-600 transition duration-300"
-                    onClick={() => openModal(event)}
-                  >
-                    View Event Details
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
+          {/* Loading Animation or Events Grid */}
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64"> {/* Center the spinner */}
+              <Spinner size="xl" /> {/* Display the loading spinner */}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
+              {events.map((event) => (
+                <EventCard key={event.id} event={event} router={router} /> // Pass router as a prop
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
