@@ -151,7 +151,7 @@ export default function Events() {
   });
 
   const [currentPage, setCurrentPage] = useState(1); //state for current page
-  const eventsPerPage = 3; //number of events per page
+  const eventsPerPage = 9; //number of events per page
 
   //calculate the index of the first and last event on the current page
   const indexOfLastEvent = currentPage * eventsPerPage;
