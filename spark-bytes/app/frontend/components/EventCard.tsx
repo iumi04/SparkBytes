@@ -24,7 +24,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, router }) => {
     e.stopPropagation();
     if (!isLoggedIn) {
       alert("You must sign in to sign up for events.");
-      router.push("/frontend/pages/signup");
+      router.push("/frontend/pages/login");
     } else {
       alert(`Signed up for ${event.title}`);
     }
