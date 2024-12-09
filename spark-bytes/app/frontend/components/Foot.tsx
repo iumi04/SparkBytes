@@ -1,6 +1,40 @@
 import React from "react";
 import { Nunito } from 'next/font/google';
 import Link from 'next/link';
+
+const nunito = Nunito({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+});
+
+function Foot() {
+  return (
+    <footer className="flex justify-between items-center p-4 bg-gray-800 text-white font-nunito">
+      <div className="w-1/4 text-left">
+      <img src="Spark!Bytes_Logo.png" className="h-[48px] object-contain"></img>
+      </div>
+      <div className="w-1/4 text-center">
+      <p className="text-lg font-bold">Spark!Bytes</p>
+      <p><Link href="/frontend/pages/about">About</Link></p>
+      <p><Link href="/frontend/pages/developers">Developers</Link></p>
+      <button>Events</button>
+      </div>
+      <div className="w-1/4 text-center">
+      <p className="text-lg font-bold">Reach us at</p>
+      <p>sparkbytes@bu.edu</p>
+      </div>
+      <div className="w-1/4 text-right">
+      <p className="text-lg font-bold">Connect with us</p>
+      </div>
+    </footer>
+  );
+}
+
+export default Foot;
+
+import React from "react";
+import { Nunito } from 'next/font/google';
+import Link from 'next/link';
 import { FaInstagram, FaLinkedin, FaFacebook } from 'react-icons/fa'; // Importing social icons
 
 const nunito = Nunito({
@@ -23,17 +57,11 @@ function Foot() {
         <p><Link href="/frontend/pages/developers" className="hover:underline">Developers</Link></p>
         <button className="mt-2 py-1 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Events</button>
       </div>
-<<<<<<< HEAD
-      <div className="w-1/4 text-center">
-      <p className="text-lg font-bold">Reach us at</p>
-      <p>sparkbytes@bu.edu</p>
-=======
 
       {/* Reach us at Section */}
       <div className="text-center w-full md:w-1/4">
         <p className="text-xl font-bold mb-2">Reach us at</p>
         <p className="text-lg">sparkbytes@bu.edu</p>
->>>>>>> 31f5568f1ca335738a4873128fdbafc57bf707d4
       </div>
 
       {/* Connect with us Section */}
