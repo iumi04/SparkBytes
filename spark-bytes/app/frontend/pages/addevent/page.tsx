@@ -2,7 +2,7 @@
 
 import Header from "../../components/Header";
 import Foot from "../../components/Foot";
-import { Input, Textarea, Button } from "@nextui-org/react";
+import { Input, Textarea, Button, Checkbox } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Nunito } from 'next/font/google'; // Import Nunito font
@@ -25,7 +25,17 @@ export default function AddEvent() {
     description: "",
     date: "",
     location: "",
+    tags: [],
   });
+
+  const tagOptions = [
+    "Vegan",
+    "Gluten-Free",
+    "Dairy-Free",
+    "Nut-Free",
+    "Seafood",
+    "Meat",
+  ];
 
   useEffect(() => {
     // Check user state and set loading to false after checking
@@ -59,12 +69,23 @@ export default function AddEvent() {
     }));
   };
 
+  const handleTagChange = (tag: string, isChecked: boolean) => {
+    setNewEvent((prevState) => {
+      const newTags = isChecked
+        ? [...prevState.tags, tag]
+        : prevState.tags.filter((t) => t !== tag);
+
+      return { ...prevState, tags: newTags };
+    });
+  };
+
   const handleSubmit = () => {
     if (
       newEvent.title &&
       newEvent.description &&
       newEvent.date &&
-      newEvent.location
+      newEvent.location &&
+      newEvent.tags.length > 0
     ) {
       console.log("New Event Created:", newEvent);
       alert("Event successfully created!");
@@ -127,6 +148,28 @@ export default function AddEvent() {
               onChange={handleInputChange}
               placeholder="Enter event location"
             />
+
+            <div>
+              <h1 className="text-lg font-medium text-primary">Event Tags:</h1>
+              <div className="grid grid-cols-2 gap-2 mt-2">
+                {tagOptions.map((tag) => (
+                  <label key={tag} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      value={tag}
+                      checked={newEvent.tags.includes(tag)}
+                      onChange={(e) => {
+                        const isChecked = e.target.checked;
+                        handleTagChange(tag, isChecked);
+                      }}
+                    />
+                    <span className="text-white">{tag}</span>
+                  </label>
+                ))}
+            </div>
+          </div>
+
+          
           </div>
 
           {/* Submit Button */}

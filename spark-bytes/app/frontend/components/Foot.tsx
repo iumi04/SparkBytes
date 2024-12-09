@@ -21,6 +21,7 @@ function Foot() {
       </div>
       <div className="w-1/4 text-center">
       <p className="text-lg font-bold">Reach us at</p>
+      <p>sparkbytes@bu.edu</p>
       </div>
       <div className="w-1/4 text-right">
       <p className="text-lg font-bold">Connect with us</p>
