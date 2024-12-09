@@ -5,7 +5,7 @@ import Foot from "../../components/Foot";
 import { Input, Textarea, Button, Checkbox } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Nunito } from 'next/font/google'; // Import Nunito font
+import { Nunito } from 'next/font/google'; 
 import { useUser } from '../../context/UserContext'; 
 import StudentHeader from '../../components/StudentHeader';
 import EventOrganizerHeader from '../../components/EventOrganizerHeader';
@@ -19,11 +19,13 @@ export default function AddEvent() {
   const { isLoggedIn, userType } = useUser(); // Get user state from context
   const router = useRouter();
   
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const [newEvent, setNewEvent] = useState({
     title: "",
     description: "",
     date: "",
+    startTime:"",
+    endTime:"",
     location: "",
     tags: [],
   });
@@ -52,13 +54,13 @@ export default function AddEvent() {
     // Redirect to events page if the user is not an event organizer
     if (!loading) {
       if (!isLoggedIn || userType?.toLowerCase() !== 'event organiser') {
-        router.push('/frontend/pages/events'); // Redirect to events page if not an event organizer
+        router.push('/frontend/pages/events'); 
       }
     }
   }, [loading, isLoggedIn, userType, router]);
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading state
+    return <div>Loading...</div>;
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -84,6 +86,8 @@ export default function AddEvent() {
       newEvent.title &&
       newEvent.description &&
       newEvent.date &&
+      newEvent.startTime &&
+      newEvent.endTime &&
       newEvent.location &&
       newEvent.tags.length > 0
     ) {
@@ -106,7 +110,7 @@ export default function AddEvent() {
     <>
       {renderHeader()}
       
-      <div className={`flex items-center justify-center min-h-screen p-8 bg-background text-foreground ${nunito.className}`}>
+      <div className={`flex items-center justify-center min-h-screen p-8 bg-background text-foreground ${nunito.className} mt-24`}>
         <div className="flex flex-col w-full max-w-2xl bg-gray-800 p-6 rounded-lg shadow-md">
           {/* Page Title */}
           <h1 className="text-3xl font-semibold text-primary mb-6 text-center">
@@ -138,6 +142,22 @@ export default function AddEvent() {
               name="date"
               type="date"
               value={newEvent.date}
+              onChange={handleInputChange}
+            />
+            <Input
+              fullWidth
+              label="Start Time"
+              name="startTime"
+              type="time"
+              value={newEvent.startTime}
+              onChange={handleInputChange}
+            />
+            <Input
+              fullWidth
+              label="End Time"
+              name="endTime"
+              type="time"
+              value={newEvent.endTime}
               onChange={handleInputChange}
             />
             <Input
