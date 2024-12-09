@@ -2,7 +2,7 @@
 
 import Header from "../../components/Header";
 import Foot from "../../components/Foot";
-import { Input, Textarea, Button, Checkbox, Radio, RadioGroup } from "@nextui-org/react";
+import { Input, Textarea, Button, Checkbox} from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Nunito } from 'next/font/google'; 
@@ -29,6 +29,7 @@ export default function AddEvent() {
     location: "",
     tags: [],
     area: "",
+    image: null,
   });
 
   const tagOptions = [
@@ -70,6 +71,16 @@ export default function AddEvent() {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setNewEvent((prevState) => ({
+        ...prevState,
+        image: file, 
+      }));
+    }
   };
 
   const handleTagChange = (tag: string, isChecked: boolean) => {
@@ -218,8 +229,23 @@ export default function AddEvent() {
                     <span className="text-white">{tag}</span>
                   </label>
                 ))}
+              </div>
             </div>
-          </div>
+
+            {/* Image Upload */}
+            <div>
+              <label htmlFor="image" className="text-lg font-medium text-primary">
+                Upload Event Image:
+              </label>
+              <input
+                id="image"
+                name="image"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded"
+              />
+            </div>
           </div>
 
           {/* Submit Button */}
