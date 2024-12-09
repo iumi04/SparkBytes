@@ -148,7 +148,6 @@ export default function AddEvent() {
               onChange={handleInputChange}
               placeholder="Enter event location"
             />
-
             <div>
               <h1 className="text-lg font-medium text-primary">Event Tags:</h1>
               <div className="grid grid-cols-2 gap-2 mt-2">
@@ -168,8 +167,6 @@ export default function AddEvent() {
                 ))}
             </div>
           </div>
-
-          
           </div>
 
           {/* Submit Button */}
