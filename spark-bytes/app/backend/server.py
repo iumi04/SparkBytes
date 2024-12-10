@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from passlib.hash import bcrypt
 import certifi
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+from flask_jwt_extended import get_jwt_identity
 from flask_cors import CORS
 import re
 import os
@@ -79,7 +80,8 @@ def login():
     if not bcrypt.verify(password, user["password"]):
         return jsonify({"msg": "Invalid password"}), 401
 
-    access_token = create_access_token(identity=username)
+    access_token = create_access_token(identity=str(user["_id"]))
+
 
     return jsonify({"access_token": access_token, "role": user["role"]}), 200
 
@@ -125,9 +127,16 @@ def get_login():
     
  # "get all events"
 @app.route("/get_events", methods=["GET"])
+@jwt_required()
 def get_events():
     try:
         events = events_collection.find()
+        user_id = get_jwt_identity()
+
+        try:
+            user_id = ObjectId(user_id)
+        except Exception:
+            return jsonify({"msg": "Invalid user ID"}), 400
 
         events_list = []
         for event in events:
@@ -138,8 +147,11 @@ def get_events():
                 "date": event.get("date"),
                 "location": event.get("location"),
                 "area": event.get("area"),
-                "tags": event.get("tags", []),  #
+                "startTime": event.get("startTime"),
+                "endTime": event.get("endTime"),
+                "tags": event.get("tags", []),  
                 "image_url": event.get("image_url"),
+                "created_by": user_id
             }
             events_list.append(event_data)
 
@@ -153,15 +165,27 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 @app.route("/events", methods=["POST"])
+@jwt_required()
 def create_event():
     try:
         data = request.form.to_dict()
         image_file = request.files.get("image") 
+        user_id = get_jwt_identity()
+
+        try:
+            print("Authorization Header:", request.headers.get("Authorization"))
+            user_id = get_jwt_identity()  
+
+        except Exception as e:
+            print("Error occurred:", e)
+            return jsonify({"msg": "Internal Server Error"}), 500
 
         required_fields = [
             "title", "description", "date", "startTime", "endTime", "location", "tags", "area"
         ]
 
+        print(data["startTime"])
+        print(data["endTime"])
 
         missing_fields = [field for field in required_fields if field not in data]
         if missing_fields:
@@ -185,6 +209,7 @@ def create_event():
             "location": data["location"],
             "tags": data["tags"].split(","), 
             "area": data["area"],
+            "created_by": user_id
         }
 
         if image_path:
@@ -199,6 +224,14 @@ def create_event():
     except Exception as e:
         print("Error occurred:", e)
         return jsonify({"msg": "Internal Server Error"}), 500
+
+
+@app.route("/whoami", methods=["GET"])
+@jwt_required()
+def who_am_i():
+    user_id = get_jwt_identity()
+    return jsonify({"logged_in_user_id": user_id}), 200
+
 
 
 if __name__ == "__main__":

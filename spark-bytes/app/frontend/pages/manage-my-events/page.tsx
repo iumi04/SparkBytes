@@ -4,7 +4,7 @@ import Header from "../../components/Header";
 import StudentHeader from "../../components/StudentHeader";
 import EventOrganizerHeader from "../../components/EventOrganizerHeader"; 
 import Foot from "../../components/Foot";
-import { Image, Button, Spinner } from "@nextui-org/react";
+import { Image, Button, Modal } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';
 import { useState, useEffect } from "react";
 import { useUser } from '../../context/UserContext'; 
@@ -19,6 +19,8 @@ export default function ManageEvents() {
   const { isLoggedIn, userType } = useUser(); 
   const router = useRouter();
   const [events, setEvents] = useState<any[]>([]); 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null); 
 
   useEffect(() => {
     if (!isLoggedIn || userType?.toLowerCase() !== 'event organiser') {
@@ -26,6 +28,16 @@ export default function ManageEvents() {
         router.push('/');
     }
   }, [isLoggedIn, userType, router]);
+
+  const openModal = (event: any) => {
+    setSelectedEvent(event);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedEvent(null);
+  };
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -67,7 +79,7 @@ export default function ManageEvents() {
           <div className="text-center mb-8"> {/* add event button */}
             <Button 
             as="a"
-            href="/frontend/pages/add-event" // Link to the Add Event page
+            href="/frontend/pages/addevent" // Link to the Add Event page
             color="primary" 
             className="text-lg py-2 px-6 rounded-full"
             >
@@ -110,6 +122,26 @@ export default function ManageEvents() {
           */}
         </div>
       </div>
+
+      {/* Modal for Event Details */}
+      {selectedEvent && (
+        <Modal open={isModalOpen} onClose={closeModal}>
+          <Modal.Header>
+            <h3>{selectedEvent.title}</h3>
+          </Modal.Header>
+          <Modal.Body>
+            <p><strong>Date:</strong> {selectedEvent.date}</p>
+            <p><strong>Location:</strong> {selectedEvent.location}</p>
+            <p>{selectedEvent.details}</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button auto flat color="error" onClick={closeModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+
       <Foot />
     </>
   );

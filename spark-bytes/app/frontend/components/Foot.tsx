@@ -18,10 +18,10 @@ function Foot() {
 
       {/* Navigation Section */}
       <div className="text-center md:text-left w-full md:w-1/4">
-        <p className="text-2xl font-bold mb-2">Spark!Bytes</p>
+        <p className="text-2xl font-bold mb-2">Spark! Bytes</p>
         <p><Link href="/frontend/pages/about" className="hover:underline">About</Link></p>
         <p><Link href="/frontend/pages/developers" className="hover:underline">Developers</Link></p>
-        <button className="mt-2 py-1 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Events</button>
+        <p><Link href="/frontend/pages/events" className="hover:underline">Events</Link></p>
       </div>
 
       {/* Reach us at Section */}

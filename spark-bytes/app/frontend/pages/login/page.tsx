@@ -40,10 +40,35 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("token", data.access_token);
         localStorage.setItem("user_type", data.role);
         login(data.role as 'student' | 'event_organiser', data.access_token);
 
+        const fetchUserId = async () => {
+          const token = data.access_token;
+          try {
+            const whoamiResponse = await fetch("http://127.0.0.1:5000/whoami", {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+  
+            if (whoamiResponse.ok) {
+              const whoamiData = await whoamiResponse.json();
+              console.log("Logged-in user ID:", whoamiData.logged_in_user_id);
+            } else {
+              console.error(
+                "Failed to fetch user ID:",
+                whoamiResponse.statusText
+              );
+            }
+          } catch (error) {
+            console.error("Error fetching user ID:", error);
+          }
+        };
+  
+        await fetchUserId();
         router.push("/");
       } else {
         setError(data.msg || "Something went wrong");
