@@ -138,7 +138,9 @@ def get_events():
                 "date": event.get("date"),
                 "location": event.get("location"),
                 "area": event.get("area"),
-                "tags": event.get("tags", []),  #
+                "startTime": event.get("startTime"),
+                "endTime": event.get("endTime"),
+                "tags": event.get("tags", []),  
                 "image_url": event.get("image_url"),
             }
             events_list.append(event_data)
@@ -162,6 +164,8 @@ def create_event():
             "title", "description", "date", "startTime", "endTime", "location", "tags", "area"
         ]
 
+        print(data["startTime"])
+        print(data["endTime"])
 
         missing_fields = [field for field in required_fields if field not in data]
         if missing_fields:

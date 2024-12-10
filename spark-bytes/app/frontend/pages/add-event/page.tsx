@@ -64,6 +64,7 @@ export default function AddEvent() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    console.log(name, value)
     setNewEvent((prevState) => ({
       ...prevState,
       [name]: value,
