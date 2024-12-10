@@ -28,8 +28,13 @@ export default function StudentHeader() {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/frontend/pages/attend-events" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
-            attend events
+          <Link href="/frontend/pages/events" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+            events
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link href="/frontend/pages/my-events" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+            my events
           </Link>
         </NavbarItem>
         {isLoggedIn && ( // Show logout button only if logged in
