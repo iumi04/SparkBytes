@@ -117,7 +117,6 @@ export default function Events() {
   const [events, setEvents] = useState<any[]>([]); 
   const [isLoading, setIsLoading] = useState(true); 
 
-
   const [selectedArea, setSelectedArea] = useState<string>('');
   const [selectedFoodPreferences, setSelectedFoodPreferences] = useState<string[]>([]);
   const [isFilterVisible, setIsFilterVisible] = useState(false);

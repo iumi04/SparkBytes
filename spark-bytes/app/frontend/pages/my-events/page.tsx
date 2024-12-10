@@ -49,7 +49,7 @@ export default function MyEvents() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoggedIn || userType?.toLowerCase() !== 'event organiser') {
+    if (!isLoggedIn || userType?.toLowerCase() !== 'student') {
         alert("You are not allowed to view this page.");
         router.push('/');
     }

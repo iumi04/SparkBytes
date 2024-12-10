@@ -39,8 +39,8 @@ export default function EventOrganizerHeader() {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/frontend/pages/manage-events" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
-            manage events
+          <Link href="/frontend/pages/manage-my-events" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+            manage my events
           </Link>
         </NavbarItem>
         <NavbarItem>
