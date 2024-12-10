@@ -18,6 +18,8 @@ const nunito = Nunito({
 
 const EventCard: React.FC<EventCardProps> = ({ event, router }) => {
   const formattedDate = new Date(event.date).toLocaleDateString();
+  const formattedStartTime = new Date(event.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const formattedEndTime = new Date(event.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   const { isLoggedIn } = useUser();
 
   const handleSignUpClick = (e: React.MouseEvent) => {
@@ -62,10 +64,12 @@ const EventCard: React.FC<EventCardProps> = ({ event, router }) => {
             onError={(e) => { e.currentTarget.src = image404.src; }}
             className="w-full h-48 object-cover rounded-md mb-4"
           />
-          <p className={`text-black dark:text-white ${nunito.className} mb-2`}>{event.description}</p>
-          <p className={`text-black dark:text-white ${nunito.className} text-sm`}>Location: {event.location}</p>
-          <p className={`text-black dark:text-white ${nunito.className} text-sm`}>Area: {event.area}</p>
-          <p className={`text-black dark:text-white ${nunito.className} text-sm`}>Tags: {event.tags ? event.tags.join(", ") : "No tags available"}</p>
+          <p className={`text-black ${nunito.className}`}>{event.description}</p>
+          <p className={`text-black ${nunito.className}`}>Location: {event.location}</p>
+          <p className={`text-black ${nunito.className}`}>Area: {event.area}</p>
+          <p className={`text-black ${nunito.className}`}>Tags: {event.tags.length ? event.tags.join(", ") : "No tags available"}</p>
+          <p className={`text-black ${nunito.className}`}>Start Time: {formattedStartTime}</p>
+          <p className={`text-black ${nunito.className}`}>End Time: {formattedEndTime}</p>
         </CardBody>
         <CardFooter>
           <Button 

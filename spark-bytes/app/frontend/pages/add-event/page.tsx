@@ -236,7 +236,7 @@ export default function AddEvent() {
                   <option value="Central">Central</option>
                   <option value="East">East</option>
                   <option value="West">West</option>
-                  <option value="Else">West</option>
+                  <option value="Else">Else</option>
                 </select>
               </div>
             </div>
