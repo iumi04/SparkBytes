@@ -27,30 +27,30 @@ export default function Header() {
   };
 
   return (
-    <Navbar shouldHideOnScroll className="absolute top-0 right-0 w-full z-10 p-4">
-      <NavbarBrand className="ml-4 font-nunito font-semibold">
-      <span>Spark</span>
-      <RxLightningBolt />
-      <span>Bytes</span>
-        </NavbarBrand>
+    <Navbar shouldHideOnScroll className="absolute top-0 right-0 w-full z-10 p-4 bg-gray-800">
+      <NavbarBrand className="ml-4 font-nunito font-semibold text-white">
+        <span>Spark</span>
+        <RxLightningBolt />
+        <span>Bytes</span>
+      </NavbarBrand>
       <NavbarContent justify="end" className="flex gap-4 mr-4">
         <NavbarItem>
-          <Link href="/" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+          <Link href="/" className="text-white hover:text-blue-400 duration-300 font-nunito font-semibold">
             home
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/frontend/pages/about" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+          <Link href="/frontend/pages/about" className="text-white hover:text-blue-400 duration-300 font-nunito font-semibold">
             about
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/frontend/pages/events" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+          <Link href="/frontend/pages/events" className="text-white hover:text-blue-400 duration-300 font-nunito font-semibold">
             events
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/frontend/pages/login" className="text-current hover:text-blue-400 duration-300 font-nunito font-semibold">
+          <Link href="/frontend/pages/login" className="text-white hover:text-blue-400 duration-300 font-nunito font-semibold">
             login
           </Link>
         </NavbarItem>

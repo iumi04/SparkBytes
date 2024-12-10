@@ -45,7 +45,7 @@ export default function Developers() {
                 <div className="p-2 mt-2 rounded-2xl bg-gradient-to-r from-white/10 to-gray-300">
                   <div className="text-black bg-white rounded-2xl shadow-lg backdrop-blur-md p-4">
                     <p><b>Role:</b> Frontend Developer</p>
-                    <p><b>Bio:</b> Prashant is a third-year CS student at Boston University. He loves solving complex problems and enjoys basketball.</p>
+                    <p><b>Bio:</b> Umi is the team leader and spearheaded the frontend. He loves playing basketball and enjoys watching J-Dramas.</p>
                   </div>
                 </div>
               </div>

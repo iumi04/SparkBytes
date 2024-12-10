@@ -63,7 +63,7 @@ export default function Login() {
           backgroundPosition: 'center',
         }}
       >
-        <div className="w-[70%] max-w-md bg-white p-6 rounded-lg shadow-lg border-2 border-black relative">
+        <div className="w-[70%] max-w-md bg-white p-6 rounded-lg shadow-lg border-6 border-black relative">
           {/* Logo on top right */}
           <img 
             src="/Boston-University-Logo.png" 

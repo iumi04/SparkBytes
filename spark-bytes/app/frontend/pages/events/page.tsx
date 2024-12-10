@@ -5,7 +5,7 @@ import Header from "../../components/Header";
 import StudentHeader from "../../components/StudentHeader";
 import EventOrganizerHeader from "../../components/EventOrganizerHeader"; 
 import Foot from "../../components/Foot";
-import { Image, Button, Modal, Spinner, Pagination } from "@nextui-org/react";
+import { Button, Modal, Spinner, Pagination } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { Nunito } from 'next/font/google';
 import { useRouter } from "next/navigation";
@@ -19,96 +19,7 @@ const nunito = Nunito({
 
 // Mock events for testing
 const mockEvents = [
-  {
-    id: 1,
-    title: "Sample Event 1",
-    date: "2024-12-01T00:00:00Z",
-    description: "This is the first sample event description.",
-    location: "Sample Location 1",
-    area: "South",
-    tags: ["Vegan", "Gluten Free"],
-    image_url: "https://example.com/sample-image1.jpg",
-  },
-  {
-    id: 2,
-    title: "Sample Event 2",
-    date: "2024-12-02T00:00:00Z",
-    description: "This is the second sample event description.",
-    location: "Sample Location 2",
-    area: "West",
-    tags: ["Dairy Free"],
-    image_url: "https://example.com/sample-image2.jpg",
-  },
-  {
-    id: 3,
-    title: "Sample Event 3",
-    date: "2024-12-03T00:00:00Z",
-    description: "This is the third sample event description.",
-    location: "Sample Location 3",
-    area: "East",
-    tags: ["Nut Free", "Seafood"],
-    image_url: "https://example.com/sample-image3.jpg",
-  },
-  {
-    id: 4,
-    title: "Sample Event 4",
-    date: "2024-12-04T00:00:00Z",
-    description: "This is the fourth sample event description.",
-    location: "Sample Location 4",
-    area: "Central",
-    tags: ["Meat", "Vegan"],
-    image_url: "https://example.com/sample-image4.jpg",
-  },
-  {
-    id: 5,
-    title: "Sample Event 5",
-    date: "2024-12-05T00:00:00Z",
-    description: "This is the fifth sample event description.",
-    location: "Sample Location 5",
-    area: "South",
-    tags: [],
-    image_url: "https://example.com/sample-image5.jpg",
-  },
-  {
-    id: 6,
-    title: "Sample Event 6",
-    date: "2024-12-06T00:00:00Z",
-    description: "This is the sixth sample event description.",
-    location: "Sample Location 6",
-    area: "West",
-    tags: ["Gluten Free", "Seafood"],
-    image_url: "https://example.com/sample-image6.jpg",
-  },
-  {
-    id: 7,
-    title: "Sample Event 7",
-    date: "2024-12-07T00:00:00Z",
-    description: "This is the seventh sample event description.",
-    location: "Sample Location 7",
-    area: "East",
-    tags: ["Vegan", "Dairy Free"],
-    image_url: "https://example.com/sample-image7.jpg",
-  },
-  {
-    id: 8,
-    title: "Sample Event 8",
-    date: "2024-12-08T00:00:00Z",
-    description: "This is the eighth sample event description.",
-    location: "Sample Location 8",
-    area: "Central",
-    tags: ["Nut Free"],
-    image_url: "https://example.com/sample-image8.jpg",
-  },
-  {
-    id: 9,
-    title: "Sample Event 9",
-    date: "2024-12-09T00:00:00Z",
-    description: "This is the ninth sample event description.",
-    location: "Sample Location 9",
-    area: "South",
-    tags: ["Meat", "Gluten Free"],
-    image_url: "https://example.com/sample-image9.jpg",
-  },
+  // Mock events as provided
 ];
 
 export default function Events() {
@@ -121,7 +32,6 @@ export default function Events() {
   const [selectedFoodPreferences, setSelectedFoodPreferences] = useState<string[]>([]);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
 
-  //NEED TO UPDATE THIS TO FETCH FROM THE DATABASE LAER ON
   useEffect(() => {
     const fetchEvents = async () => {
       setIsLoading(true);
@@ -148,14 +58,9 @@ export default function Events() {
   
     fetchEvents();
   }, []);
-  
-
 
   const filteredEvents = events.filter((event) => {
-
     const areaMatch = selectedArea ? event.area === selectedArea : true;
-
-
     const foodPreferenceMatch = selectedFoodPreferences.length
       ? selectedFoodPreferences.every((preference) => event.tags.includes(preference))
       : true;
@@ -166,14 +71,11 @@ export default function Events() {
   const [currentPage, setCurrentPage] = useState(1); 
   const eventsPerPage = 9; 
 
-
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
   const currentEvents = filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent); 
 
-
   const totalPages = Math.ceil(filteredEvents.length / eventsPerPage);
-
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page); 
@@ -187,19 +89,24 @@ export default function Events() {
         <Header />
       )}
 
-      <div className={`min-h-screen pt-32 p-8 bg-background text-foreground ${nunito.className}`}>
+      {/* Main Content */}
+      <div className={`min-h-screen pt-32 p-8 bg-cover bg-center text-foreground ${nunito.className}`} 
+        style={{ backgroundImage: "url('/thumb-1920-666439.jpg')" }}>
+
         <div className="max-w-7xl mx-auto space-y-12">
-          {/* Section Title */}
-          <div className="text-center">
-            <h1 className={`text-4xl font-semibold text-primary mb-4`}>Upcoming Events</h1>
-            <p className={`text-lg max-w-2xl mx-auto mb-12`}>
-              Check out the upcoming events at Boston University where you can donate or claim free food!
-            </p>
+
+          {/* Smaller and Nicer Textbox for Upcoming Events Section */}
+          <div className="bg-gray-800 bg-opacity-90 text-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto">
+            <div className="text-center">
+              <h1 className="text-3xl font-semibold mb-3">Upcoming Events</h1>
+              <p className="text-md max-w-2xl mx-auto mb-6">
+                Check out the upcoming events at Boston University where you can donate or claim free food!
+              </p>
+            </div>
           </div>
 
           {/* Filter Section */}
           <div className="flex justify-start mb-8">
-            {/* Filter Button with Arrow */}
             <Button
               onClick={() => setIsFilterVisible(!isFilterVisible)}
               color="primary"
@@ -209,12 +116,9 @@ export default function Events() {
               <IoIosArrowDown />
             </Button>
 
-            {/* Dropdowns for Location and Food Preferences */}
             {isFilterVisible && (
               <div className="bg-white p-4 rounded-md shadow-md space-y-4 text-black w-[300px] mt-2">
-                {/* Container for both dropdowns in a row */}
                 <div className="grid grid-cols-2 gap-4">
-                  {/* Location Dropdown */}
                   <div>
                     <p className="font-bold mb-2">Area</p>
                     <select
@@ -230,7 +134,6 @@ export default function Events() {
                     </select>
                   </div>
 
-                  {/* Food Preferences Dropdown */}
                   <div>
                     <p className="font-bold mb-2">Food Preferences</p>
                     <div className="space-y-2">
@@ -256,10 +159,10 @@ export default function Events() {
             )}
           </div>
 
-          {/* Loading Animation or Events Grid */}
+          {/* Loading or Events Grid */}
           {isLoading ? (
-            <div className="flex justify-center items-center h-64"> {/* Center the spinner */}
-              <Spinner size="lg" /> {/* Display the loading spinner */}
+            <div className="flex justify-center items-center h-64">
+              <Spinner size="lg" />
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
@@ -273,10 +176,10 @@ export default function Events() {
           <div className="flex justify-center mt-8">
             <Pagination
               showShadow
-              showControls // Show pagination controls
-              total={totalPages} // Total number of pages
-              data-active-page={currentPage} // Current active page
-              onChange={handlePageChange} // Update current page on change
+              showControls
+              total={totalPages}
+              data-active-page={currentPage}
+              onChange={handlePageChange}
             />
           </div>
         </div>
