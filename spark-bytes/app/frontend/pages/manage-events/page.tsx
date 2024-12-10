@@ -21,6 +21,7 @@ export default function ManageEvents() {
   const [events, setEvents] = useState<any[]>([]); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null); 
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isLoggedIn || userType?.toLowerCase() !== 'event organiser') {
@@ -52,6 +53,8 @@ export default function ManageEvents() {
 
     fetchEvents();
   }, []);
+
+  
 
   const renderHeader = () => {
     if (isLoggedIn) {

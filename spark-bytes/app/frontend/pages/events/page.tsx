@@ -228,6 +228,7 @@ export default function Events() {
                       <option value="West">West</option>
                       <option value="South">South</option>
                       <option value="Central">Central</option>
+                      <option value="Central">Else</option>
                     </select>
                   </div>
 
