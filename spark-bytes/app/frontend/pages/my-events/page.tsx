@@ -3,50 +3,22 @@
 import Header from "../../components/Header";
 import StudentHeader from "../../components/StudentHeader";
 import EventOrganizerHeader from "../../components/EventOrganizerHeader"; 
+import Foot from "../../components/Foot";
+import { Image, Button, Spinner } from "@nextui-org/react";
+import { Nunito } from 'next/font/google';
 import { useState, useEffect } from "react";
-import EventCard from '../../components/EventCard';
-import { Spinner } from "@nextui-org/react";
 import { useUser } from '../../context/UserContext'; 
 import { useRouter } from "next/navigation";
-import { Nunito } from "next/font/google";
 
 const nunito = Nunito({
-    subsets: ['latin'],
-    weight: ['400', '700'],
-  });  
-
-const mockUserEvents = [
-  {
-    id: 1,
-    title: "My Event 1",
-    date: "2024-12-01T00:00:00Z",
-    start_time: "2024-12-01T10:00:00Z",
-    end_time: "2024-12-01T12:00:00Z",
-    description: "Description for My Event 1.",
-    location: "Location 1",
-    area: "South",
-    tags: ["Vegan", "Gluten Free"],
-    image_url: "https://example.com/sample-image1.jpg",
-  },
-  {
-    id: 2,
-    title: "My Event 2",
-    date: "2024-12-02T00:00:00Z",
-    start_time: "2024-12-02T11:00:00Z",
-    end_time: "2024-12-02T13:00:00Z",
-    description: "Description for My Event 2.",
-    location: "Location 2",
-    area: "West",
-    tags: ["Dairy Free"],
-    image_url: "https://example.com/sample-image2.jpg",
-  },
-];
+  subsets: ['latin'],
+  weight: ['400', '700'],
+});
 
 export default function MyEvents() {
-  const [userEvents, setUserEvents] = useState<any[]>(mockUserEvents);
-  const [isLoading, setIsLoading] = useState(true);
   const { isLoggedIn, userType } = useUser(); 
   const router = useRouter();
+  const [events, setEvents] = useState<any[]>([]); 
 
   useEffect(() => {
     if (!isLoggedIn || userType?.toLowerCase() !== 'student') {
@@ -55,29 +27,80 @@ export default function MyEvents() {
     }
   }, [isLoggedIn, userType, router]);
 
-  useEffect(() => { //change this to the 
-    const fetchUserEvents = async () => {
-      setIsLoading(true);
-      setIsLoading(false);
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/get_events"); 
+        const data = await response.json();
+        setEvents(data);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
     };
 
-    fetchUserEvents();
+    fetchEvents();
   }, []);
 
+  const renderHeader = () => {
+    if (isLoggedIn) {
+      return userType === 'student' ? <StudentHeader /> : <EventOrganizerHeader />;
+    }
+    return <Header />;
+  };
+
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">My Events</h1>
-      {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <Spinner size="xl" />
+    <>
+      {renderHeader()}
+
+      <div className={`min-h-screen pt-32 p-8 bg-background text-foreground ${nunito.className}`}> 
+        <div className="max-w-7xl mx-auto space-y-12">
+          {/* Section Title */}
+          <div className="text-center">
+            <h1 className={`text-4xl font-semibold text-primary mb-4`}>
+              My Events
+            </h1>
+            <p className={`text-lg max-w-2xl mx-auto mb-12`}>
+              Here you can see all the events that you have signed up for and cancel any events you will no longer be attending.
+            </p>
+          </div>
+          
+
+          {/* Events Grid 
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {events.map((event) => (
+              <div key={event._id} className="bg-gray-800 bg-opacity-80 p-6 rounded-2xl shadow-lg backdrop-blur-md flex flex-col h-auto">
+                <div className="flex-1 mb-4">
+                  <Image
+                    className="dark:invert rounded-lg object-cover object-center"
+                    src="/spark_bytes.jpeg" 
+                    alt={event.title}
+                    width="100%"
+                    height="150px" // Change img height here
+                  />
+                </div>
+                <div className="flex-1 text-center lg:text-left mb-4">
+                  <h2 className={`text-2xl font-semibold text-primary mb-2`}>
+                    {event.title}
+                  </h2>
+                  <p className={`text-lg mb-4`}>
+                    {event.description}
+                  </p>
+                  <Button 
+                    as="a"
+                    href={`/frontend/pages/manage-events/${event._id}`} 
+                    color="primary" 
+                    className="text-lg py-2 px-6 rounded-full"
+                  >
+                    Manage Event
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+          */}
         </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {userEvents.map((event) => (
-            <EventCard key={event.id} event={event} router={router} />
-          ))}
-        </div>
-      )}
-    </div>
+      </div>
+      <Foot />
+    </>
   );
 }
