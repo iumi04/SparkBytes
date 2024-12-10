@@ -3,10 +3,10 @@
 import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -30,7 +30,7 @@ export default function Signup() {
       return;
     }
 
-    if (password != confirmpassword) {
+    if (password !== confirmpassword) {
       setError("Passwords do not match");
       return;
     }
@@ -60,9 +60,26 @@ export default function Signup() {
 
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="w-[70%] max-w-md bg-white p-6 rounded-lg shadow-md">
-          <Link href="/" className="mt-4 font-nunito font-bold text-4xl text-center text-black"> Spark! Bytes </Link>
+      <div
+        className="flex items-center justify-center min-h-screen bg-gray-100"
+        style={{
+          backgroundImage: "url('/16-10227-SKYLINE-006-cropped-compressed-1200x675.jpg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="w-[70%] max-w-md bg-white p-6 rounded-lg shadow-lg border-2 border-black relative">
+          {/* Logo on top right */}
+          <img 
+            src="/Boston-University-Logo.png" 
+            alt="Boston University Logo"
+            className="absolute top-4 right-4 h-12" 
+          />
+          {/* Spark! Bytes heading */}
+          <Link href="/" className="mt-4 font-nunito font-bold text-4xl text-center text-black"> 
+            Spark! Bytes 
+          </Link>
+          
           <Input 
             type="email"
             variant="underlined"
@@ -105,8 +122,8 @@ export default function Signup() {
               <Button className="w-full">Register as: {role.charAt(0).toUpperCase() + role.slice(1)}</Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Select Role">
-              <DropdownItem className="text-black" onClick={() => setRole("Student")}>Student</DropdownItem>
-              <DropdownItem className="text-black" onClick={() => setRole("Event Organiser")}>Event Organiser</DropdownItem>
+              <DropdownItem className="text-black" onClick={() => setRole("student")}>Student</DropdownItem>
+              <DropdownItem className="text-black" onClick={() => setRole("event_organiser")}>Event Organiser</DropdownItem>
             </DropdownMenu>
           </Dropdown>
           <Button 
