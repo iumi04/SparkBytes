@@ -105,7 +105,7 @@ export default function Developers() {
                 <div className="p-2 mt-2 rounded-2xl bg-gradient-to-r from-white/10 to-gray-300">
                   <div className="text-black bg-white rounded-2xl shadow-lg backdrop-blur-md p-4">
                     <p><b>Role:</b> Frontend Developer</p>
-                    <p><b>Bio:</b> Martin coordinates the team and ensures timely delivery of features while managing client relationships.</p>
+                    <p><b>Bio:</b> Martin coordinates the team and works on the frontend functionality of the website. He enjoys skiing and has a pet dog.</p>
                   </div>
                 </div>
               </div>
