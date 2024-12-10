@@ -4,7 +4,7 @@ import Header from "../../components/Header";
 import StudentHeader from "../../components/StudentHeader";
 import EventOrganizerHeader from "../../components/EventOrganizerHeader"; 
 import Foot from "../../components/Foot";
-import { Image, Button, Modal } from "@nextui-org/react";
+import { Image, Button, Spinner } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';
 import { useState, useEffect } from "react";
 import { useUser } from '../../context/UserContext'; 
@@ -15,30 +15,17 @@ const nunito = Nunito({
   weight: ['400', '700'],
 });
 
-export default function ManageEvents() {
+export default function MyEvents() {
   const { isLoggedIn, userType } = useUser(); 
   const router = useRouter();
   const [events, setEvents] = useState<any[]>([]); 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<any>(null); 
-  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isLoggedIn || userType?.toLowerCase() !== 'event organiser') {
+    if (!isLoggedIn || userType?.toLowerCase() !== 'student') {
         alert("You are not allowed to view this page.");
         router.push('/');
     }
   }, [isLoggedIn, userType, router]);
-
-  const openModal = (event: any) => {
-    setSelectedEvent(event);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedEvent(null);
-  };
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -53,8 +40,6 @@ export default function ManageEvents() {
 
     fetchEvents();
   }, []);
-
-  
 
   const renderHeader = () => {
     if (isLoggedIn) {
@@ -72,23 +57,13 @@ export default function ManageEvents() {
           {/* Section Title */}
           <div className="text-center">
             <h1 className={`text-4xl font-semibold text-primary mb-4`}>
-              Manage Events
+              My Events
             </h1>
             <p className={`text-lg max-w-2xl mx-auto mb-12`}>
-              Here you can manage your events, add new ones, or edit existing events.
+              Here you can see all the events that you have signed up for and cancel any events you will no longer be attending.
             </p>
           </div>
           
-          <div className="text-center mb-8"> {/* add event button */}
-            <Button 
-            as="a"
-            href="/frontend/pages/addevent" // Link to the Add Event page
-            color="primary" 
-            className="text-lg py-2 px-6 rounded-full"
-            >
-            Add Event
-            </Button>
-          </div>
 
           {/* Events Grid 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -125,26 +100,6 @@ export default function ManageEvents() {
           */}
         </div>
       </div>
-
-      {/* Modal for Event Details */}
-      {selectedEvent && (
-        <Modal open={isModalOpen} onClose={closeModal}>
-          <Modal.Header>
-            <h3>{selectedEvent.title}</h3>
-          </Modal.Header>
-          <Modal.Body>
-            <p><strong>Date:</strong> {selectedEvent.date}</p>
-            <p><strong>Location:</strong> {selectedEvent.location}</p>
-            <p>{selectedEvent.details}</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button auto flat color="error" onClick={closeModal}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      )}
-
       <Foot />
     </>
   );

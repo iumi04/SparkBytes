@@ -117,7 +117,6 @@ export default function Events() {
   const [events, setEvents] = useState<any[]>([]); 
   const [isLoading, setIsLoading] = useState(true); 
 
-
   const [selectedArea, setSelectedArea] = useState<string>('');
   const [selectedFoodPreferences, setSelectedFoodPreferences] = useState<string[]>([]);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -212,7 +211,7 @@ export default function Events() {
 
             {/* Dropdowns for Location and Food Preferences */}
             {isFilterVisible && (
-              <div className="bg-black p-4 rounded-md shadow-md space-y-4 text-white w-[300px] mt-2">
+              <div className="bg-white p-4 rounded-md shadow-md space-y-4 text-black w-[300px] mt-2">
                 {/* Container for both dropdowns in a row */}
                 <div className="grid grid-cols-2 gap-4">
                   {/* Location Dropdown */}
@@ -221,7 +220,7 @@ export default function Events() {
                     <select
                       value={selectedArea}
                       onChange={(e) => setSelectedArea(e.target.value)}
-                      className="w-full p-2 border border-gray-300 rounded-md bg-gray-800 text-white"
+                      className="w-full p-2 border border-black-300 rounded-md bg-white-800 text-black"
                     >
                       <option value="">Select Area</option>
                       <option value="East">East</option>

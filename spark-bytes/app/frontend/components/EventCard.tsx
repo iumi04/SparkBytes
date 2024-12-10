@@ -12,14 +12,14 @@ interface EventCardProps {
 }
 
 const nunito = Nunito({
-    subsets: ['latin'],
-    weight: ['400', '700'],
-  });
+  subsets: ['latin'],
+  weight: ['400', '700'],
+});
 
 const EventCard: React.FC<EventCardProps> = ({ event, router }) => {
   const formattedDate = new Date(event.date).toLocaleDateString();
-  const formattedStartTime = new Date(event.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  const formattedEndTime = new Date(event.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const formattedStartTime = new Date(`${event.date}T${event.startTime}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const formattedEndTime = new Date(`${event.date}T${event.endTime}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   const { isLoggedIn } = useUser();
 
   const handleSignUpClick = (e: React.MouseEvent) => {

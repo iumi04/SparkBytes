@@ -15,20 +15,19 @@ const nunito = Nunito({
   weight: ['400', '700'],
 });
 
-export default function AttendEvents() {
-  const { isLoggedIn, userType } = useUser(); // Get user state from context
+export default function ManageEvents() {
+  const { isLoggedIn, userType } = useUser(); 
   const router = useRouter();
-  const [events, setEvents] = useState<any[]>([]); // State to hold events
+  const [events, setEvents] = useState<any[]>([]); 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<any>(null); // Event details for modal
+  const [selectedEvent, setSelectedEvent] = useState<any>(null); 
 
-  // Check user type on component mount
   useEffect(() => {
-    if (!isLoggedIn || userType?.toLowerCase() !== 'student') {
-      alert("You must be logged in to view this page.");
-      router.push('/');
+    if (!isLoggedIn || userType?.toLowerCase() !== 'event organiser') {
+        alert("You are not allowed to view this page.");
+        router.push('/');
     }
-  }, [isLoggedIn, router]);
+  }, [isLoggedIn, userType, router]);
 
   const openModal = (event: any) => {
     setSelectedEvent(event);
@@ -40,11 +39,10 @@ export default function AttendEvents() {
     setSelectedEvent(null);
   };
 
-  // Fetch events from the backend
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5000/get_events"); // this url must be changed
+        const response = await fetch("http://127.0.0.1:5000/get_events"); 
         const data = await response.json();
         setEvents(data);
       } catch (error) {
@@ -55,27 +53,41 @@ export default function AttendEvents() {
     fetchEvents();
   }, []);
 
+  const renderHeader = () => {
+    if (isLoggedIn) {
+      return userType === 'student' ? <StudentHeader /> : <EventOrganizerHeader />;
+    }
+    return <Header />;
+  };
+
   return (
     <>
-      {isLoggedIn ? (
-        userType === 'student' ? <StudentHeader /> : <EventOrganizerHeader />
-      ) : (
-        <Header />
-      )}
+      {renderHeader()}
 
-      <div className="min-h-screen pt-32 p-8 bg-background text-foreground"> 
+      <div className={`min-h-screen pt-32 p-8 bg-background text-foreground ${nunito.className}`}> 
         <div className="max-w-7xl mx-auto space-y-12">
           {/* Section Title */}
           <div className="text-center">
-            <h1 className="text-4xl font-semibold text-primary mb-4">
-              Upcoming Events
+            <h1 className={`text-4xl font-semibold text-primary mb-4`}>
+              Manage Events
             </h1>
-            <p className="text-lg max-w-2xl mx-auto mb-12">
-              Check out the upcoming events where you can attend and claim free food!
+            <p className={`text-lg max-w-2xl mx-auto mb-12`}>
+              Here you can manage your events, add new ones, or edit existing events.
             </p>
           </div>
+          
+          <div className="text-center mb-8"> {/* add event button */}
+            <Button 
+            as="a"
+            href="/frontend/pages/addevent" // Link to the Add Event page
+            color="primary" 
+            className="text-lg py-2 px-6 rounded-full"
+            >
+            Add Event
+            </Button>
+          </div>
 
-          {/* Events Grid */}
+          {/* Events Grid 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {events.map((event) => (
               <div key={event._id} className="bg-gray-800 bg-opacity-80 p-6 rounded-2xl shadow-lg backdrop-blur-md flex flex-col h-auto">
@@ -89,19 +101,25 @@ export default function AttendEvents() {
                   />
                 </div>
                 <div className="flex-1 text-center lg:text-left mb-4">
-                  <h2 className="text-2xl font-semibold text-primary mb-2">{event.title}</h2>
-                  <p className="text-lg mb-4">{event.description}</p>
+                  <h2 className={`text-2xl font-semibold text-primary mb-2`}>
+                    {event.title}
+                  </h2>
+                  <p className={`text-lg mb-4`}>
+                    {event.description}
+                  </p>
                   <Button 
-                    onClick={() => openModal(event)} 
+                    as="a"
+                    href={`/frontend/pages/manage-events/${event._id}`} 
                     color="primary" 
                     className="text-lg py-2 px-6 rounded-full"
                   >
-                    View Event Details
+                    Manage Event
                   </Button>
                 </div>
               </div>
             ))}
           </div>
+          */}
         </div>
       </div>
 
@@ -116,8 +134,15 @@ export default function AttendEvents() {
             <p><strong>Location:</strong> {selectedEvent.location}</p>
             <p>{selectedEvent.details}</p>
           </Modal.Body>
+          <Modal.Footer>
+            <Button auto flat color="error" onClick={closeModal}>
+              Close
+            </Button>
+          </Modal.Footer>
         </Modal>
       )}
+
+      <Foot />
     </>
   );
 }

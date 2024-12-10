@@ -64,6 +64,7 @@ export default function AddEvent() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    console.log(name, value)
     setNewEvent((prevState) => ({
       ...prevState,
       [name]: value,
@@ -241,7 +242,7 @@ export default function AddEvent() {
                   <option value="Central">Central</option>
                   <option value="East">East</option>
                   <option value="West">West</option>
-                  <option value="Else">West</option>
+                  <option value="Else">Else</option>
                 </select>
               </div>
             </div>
