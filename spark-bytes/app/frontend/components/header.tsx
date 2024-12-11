@@ -1,10 +1,13 @@
-'use client'; // This is a client component
+// components/Header.tsx
+'use client';
 
-import { useState, useEffect } from 'react';
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/navbar";
+import { NavbarItem } from "@nextui-org/navbar";
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { useUser } from '../context/UserContext'; // Import useUser hook
 import { Nunito } from 'next/font/google';
-import { RxLightningBolt } from "react-icons/rx";
+
+import BaseHeader from './BaseHeader'; // Import BaseHeader component
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -27,34 +30,27 @@ export default function Header() {
   };
 
   return (
-    <Navbar shouldHideOnScroll className="absolute top-0 right-0 w-full z-10 p-4 bg-gray-800">
-      <NavbarBrand className="ml-4 font-nunito font-semibold text-white">
-        <span>Spark</span>
-        <RxLightningBolt />
-        <span>Bytes</span>
-      </NavbarBrand>
-      <NavbarContent justify="end" className="flex gap-4 mr-4">
-        <NavbarItem>
-          <Link href="/" className="text-white hover:text-blue-400 duration-300 font-nunito font-semibold">
-            home
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="/frontend/pages/about" className="text-white hover:text-blue-400 duration-300 font-nunito font-semibold">
-            about
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="/frontend/pages/events" className="text-white hover:text-blue-400 duration-300 font-nunito font-semibold">
-            events
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="/frontend/pages/login" className="text-white hover:text-blue-400 duration-300 font-nunito font-semibold">
-            login
-          </Link>
-        </NavbarItem>
-      </NavbarContent>
-    </Navbar>
+    <BaseHeader>
+      <NavbarItem>
+        <Link href="/" className="text-white hover:text-blue-400 duration-300 font-nunito font-semibold">
+          home
+        </Link>
+      </NavbarItem>
+      <NavbarItem>
+        <Link href="/frontend/pages/about" className="text-white hover:text-blue-400 duration-300 font-nunito font-semibold">
+          about
+        </Link>
+      </NavbarItem>
+      <NavbarItem>
+        <Link href="/frontend/pages/events" className="text-white hover:text-blue-400 duration-300 font-nunito font-semibold">
+          events
+        </Link>
+      </NavbarItem>
+      <NavbarItem>
+        <Link href="/frontend/pages/login" className="text-white hover:text-blue-400 duration-300 font-nunito font-semibold">
+          login
+        </Link>
+      </NavbarItem>
+    </BaseHeader>
   );
 }
