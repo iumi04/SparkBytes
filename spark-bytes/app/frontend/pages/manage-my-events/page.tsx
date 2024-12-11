@@ -79,7 +79,7 @@ export default function ManageEvents() {
           <div className="text-center mb-8"> {/* add event button */}
             <Button 
             as="a"
-            href="/frontend/pages/addevent" // Link to the Add Event page
+            href="/frontend/pages/add-event" // Link to the Add Event page
             color="primary" 
             className="text-lg py-2 px-6 rounded-full"
             >
