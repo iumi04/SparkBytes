@@ -16,7 +16,7 @@ const nunito = Nunito({
 });
 
 export default function AddEvent() {
-  const { isLoggedIn, userType } = useUser(); // Get user state from context
+  const { isLoggedIn, userType } = useUser(); // Checks the what state the user is in, student or event organizer
   const router = useRouter();
   
   const [loading, setLoading] = useState(true);
@@ -32,7 +32,7 @@ export default function AddEvent() {
     image: null,
   });
 
-  const tagOptions = [
+  const tagOptions = [ //Options for the filters and tags
     "Vegan",
     "Gluten-Free",
     "Dairy-Free",
@@ -62,7 +62,7 @@ export default function AddEvent() {
     return <div>Loading...</div>;
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => { 
     const { name, value } = e.target;
     console.log(name, value)
     setNewEvent((prevState) => ({
@@ -99,7 +99,7 @@ export default function AddEvent() {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async () => { // Makes sure that all of the fields in the page are filled out before an event is allowed to be created
     if (
       newEvent.title &&
       newEvent.description &&
@@ -167,7 +167,7 @@ export default function AddEvent() {
       <div
   className={`flex items-center justify-center min-h-screen p-8 text-foreground ${nunito.className} mt-24`}
   style={{
-    backgroundImage: `url('/snowy-boston-university-ycc3rw7yksh50425.jpg')`,
+    backgroundImage: `url('/snowy-boston-university-ycc3rw7yksh50425.jpg')`, //background picture for the page
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundAttachment: 'fixed'
@@ -180,14 +180,14 @@ export default function AddEvent() {
           </h1>
 
           {/* Event Form */}
-          <div className="space-y-4">
+          <div className="space-y-4"> 
             <Input
               fullWidth
               label="Event Title"
               name="title"
               value={newEvent.title}
               onChange={handleInputChange}
-              placeholder="Enter event title"
+              placeholder="Enter event title" //section to enter the title of your event
             />
             <Textarea
               fullWidth
@@ -196,13 +196,13 @@ export default function AddEvent() {
               value={newEvent.description}
               onChange={handleInputChange}
               rows={4}
-              placeholder="Describe the event details"
+              placeholder="Describe the event details" // section to enter the details of your event
             />
             <Input
               fullWidth
               label="Date"
               name="date"
-              type="date"
+              type="date" // section to enter the date the event will happen
               value={newEvent.date}
               onChange={handleInputChange}
             />
@@ -210,7 +210,7 @@ export default function AddEvent() {
               fullWidth
               label="Start Time"
               name="startTime"
-              type="time"
+              type="time" // section to enter the start time of the event
               value={newEvent.startTime}
               onChange={handleInputChange}
             />
@@ -218,14 +218,14 @@ export default function AddEvent() {
               fullWidth
               label="End Time"
               name="endTime"
-              type="time"
+              type="time" // section to enter the end time of the event
               value={newEvent.endTime}
               onChange={handleInputChange}
             />
             <Input
               fullWidth
               label="Location"
-              name="location"
+              name="location" // section to enter the exact location (street etc) of the event
               value={newEvent.location}
               onChange={handleInputChange}
               placeholder="Enter event location"
@@ -237,9 +237,9 @@ export default function AddEvent() {
                   Select The Event Area:
                 </label>
                 <select
-                  id="area"
+                  id="area" // Area to select the general area the event will take place in
                   name="area"
-                  value={newEvent.area}
+                  value={newEvent.area} 
                   onChange={handleAreaChange}
                   className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded"
                 >
@@ -265,7 +265,7 @@ export default function AddEvent() {
                       checked={newEvent.tags.includes(tag)}
                       onChange={(e) => {
                         const isChecked = e.target.checked;
-                        handleTagChange(tag, isChecked);
+                        handleTagChange(tag, isChecked); // Area to allow the user to pick tags the event will have
                       }}
                     />
                     <span className="text-white">{tag}</span>
@@ -283,7 +283,7 @@ export default function AddEvent() {
                 id="image"
                 name="image"
                 type="file"
-                accept="image/*"
+                accept="image/*" // Area where you can upload an image that will appear on the event card
                 onChange={handleFileChange}
                 className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded"
               />

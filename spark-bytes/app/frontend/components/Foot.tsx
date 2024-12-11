@@ -13,7 +13,7 @@ function Foot() {
     <footer className="flex flex-col md:flex-row justify-between items-center p-8 bg-gray-800 text-white font-nunito space-y-6 md:space-y-0">
       {/* Logo Section */}
       <div className="text-center md:text-left w-full md:w-1/4">
-        <img src="Spark!Bytes_Logo.png" className="h-[48px] object-contain mx-auto md:mx-0" alt="Spark!Bytes Logo" />
+        <img src='/Spark!Bytes_Logo.png' className="h-[48px] object-contain mx-auto md:mx-0" alt="Spark!Bytes Logo" />
       </div>
 
       {/* Navigation Section */}
