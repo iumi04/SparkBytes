@@ -122,7 +122,7 @@ export default function Signup() {
           {/* Single Checkbox for receiving emails about events */}
           <div className="mb-5 flex items-center">
             <Checkbox 
-              isChecked={receiveEmails} 
+              checked={receiveEmails} 
               onChange={(e) => setReceiveEmails(e.target.checked)} 
               color="primary"
               className="text-black"
@@ -137,8 +137,8 @@ export default function Signup() {
               <Button className="w-full">Register as: {role.charAt(0).toUpperCase() + role.slice(1)}</Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Select Role">
-              <DropdownItem className="text-black" onClick={() => setRole("student")}>Student</DropdownItem>
-              <DropdownItem className="text-black" onClick={() => setRole("event_organiser")}>Event Organiser</DropdownItem>
+              <DropdownItem key="student" className="text-black" onClick={() => setRole("student")}>Student</DropdownItem>
+              <DropdownItem key="event-organizer" className="text-black" onClick={() => setRole("event organizer")}>Event Organizer</DropdownItem>
             </DropdownMenu>
           </Dropdown>
 
