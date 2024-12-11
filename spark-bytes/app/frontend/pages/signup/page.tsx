@@ -6,7 +6,7 @@ import { Nunito } from 'next/font/google';
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
-import { Checkbox, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";  // Import Checkbox component
+import { Checkbox, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";  //import Checkbox for email thingy
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -20,12 +20,12 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmpassword] = useState("");
   const [role, setRole] = useState("student");
-  const [receiveEmails, setReceiveEmails] = useState(false);  // Boolean value for checkbox
+  const [receiveEmails, setReceiveEmails] = useState(false);  //boolean value for checkbox from google
   const [error, setError] = useState("");
 
   const handleSignup = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
+    //make sure all requirements are met else fail
     if (!username || !password || !email) {
       setError("Email, username, and password are required");
       return;
@@ -42,7 +42,7 @@ export default function Signup() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password, role, email, receiveEmails }),  // Include the receiveEmails state
+        body: JSON.stringify({ username, password, role, email, receiveEmails }),  //include receiveEmails state
       });
 
       const data = await response.json();
@@ -70,13 +70,13 @@ export default function Signup() {
         }}
       >
         <div className="w-[70%] max-w-md bg-white p-6 rounded-lg shadow-lg border-6 border-black relative">
-          {/* Logo on top right */}
+          {/*BU logo on top right */}
           <img 
             src="/Boston-University-Logo.png" 
             alt="Boston University Logo"
             className="absolute top-4 right-4 h-12" 
           />
-          {/* Spark! Bytes heading */}
+          {/*Spark! Bytes heading*/}
           <Link href="/" className="mt-4 font-nunito font-bold text-4xl text-center text-black"> 
             Spark! Bytes 
           </Link>
@@ -119,7 +119,7 @@ export default function Signup() {
             className="mb-5"
           />
 
-          {/* Single Checkbox for receiving emails about events */}
+          {/*only one checkbox for receiving emails*/}
           <div className="mb-5 flex items-center">
             <Checkbox 
               isChecked={receiveEmails} 
