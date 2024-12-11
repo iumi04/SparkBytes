@@ -71,17 +71,30 @@ export default function MyEvents() {
     <>
       {renderHeader()}
 
-      <div className={`min-h-screen pt-32 p-8 bg-background text-foreground ${nunito.className}`}> 
+      <div
+  className={`min-h-screen pt-32 p-8 text-foreground ${nunito.className}`}
+  style={{
+    backgroundImage: `url('/landscape_pond_trees_clouds_mountains_reflection_water_landscape_wallpaper_background_4k_hd_nature-1920x1080.jpg')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundAttachment: 'fixed'
+  }}
+>
+
         <div className="max-w-7xl mx-auto space-y-12">
           {/* Section Title */}
-          <div className="text-center">
-            <h1 className={`text-4xl font-semibold text-primary mb-4`}>
-              My Events
-            </h1>
-            <p className={`text-lg max-w-2xl mx-auto mb-12`}>
-              Here you can see all the events that you have signed up for and cancel any events you will no longer be attending.
-            </p>
-          </div>
+          {/* Section Title */}
+<div className="bg-gray-800 bg-opacity-80 text-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto mb-8">
+  <div className="text-center">
+    <h1 className="text-4xl font-semibold text-primary mb-4">
+      My Events
+    </h1>
+    <p className="text-lg max-w-2xl mx-auto mb-12">
+      Here you can see all the events that you have signed up for and cancel any events you will no longer be attending.
+    </p>
+  </div>
+</div>
+
 
           {/* Events Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
