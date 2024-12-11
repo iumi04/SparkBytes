@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from "react";
 import { Checkbox, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";  //import Checkbox for email thingy
 
-const nunito = Nunito({
+const nunito = Nunito({ 
   subsets: ['latin'],
   weight: ['400', '700'],
 });
