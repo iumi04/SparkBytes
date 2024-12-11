@@ -8,9 +8,17 @@ from flask_cors import CORS
 import re
 import os
 from bson import ObjectId
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 
 app = Flask(__name__)
+
+SMTP_HOST = "smtp.gmail.com"
+SMTP_PORT = 587
+EMAIL_USERNAME = "pranitd23@gmail.com"  
+EMAIL_PASSWORD = "zkrq woxt ioka lwfc" 
 
 CORS(app, resources={r"/*": {"origins": "*"}})
 
@@ -256,11 +264,45 @@ def signup_event():
                 {"$push": {"signed_up_events": event_id}}
             )
 
+            user = loginInfo_collection.find_one({"_id": ObjectId(user_id)})
+        user_email = user.get("email")  
+
+        send_email_notification(user_email, event) 
+
         return jsonify({"msg": "Successfully signed up for the event"}), 200
 
     except Exception as e:
         print("Error occurred:", str(e))
         return jsonify({"msg": "Internal Server Error from backend", "error": str(e)}), 500
+
+def send_email_notification(user_email, event):
+    subject = f"Reminder: {event['title']} starts soon!"
+    body = f"""
+    Hi there,
+
+    You successfully signed up for the event "{event['title']}".
+
+    Event Details:
+    - Date: {event['date']}
+    - Start Time: {event['startTime']}
+    - Location: {event['location']}
+
+    Thank you for signing up!
+
+    Love,
+    The SparkBytes Team
+    """
+
+    msg = MIMEMultipart()
+    msg["From"] = EMAIL_USERNAME
+    msg["To"] = user_email
+    msg["Subject"] = subject
+    msg.attach(MIMEText(body, "plain"))
+
+    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+        server.starttls()
+        server.login(EMAIL_USERNAME, EMAIL_PASSWORD)
+        server.sendmail(EMAIL_USERNAME, user_email, msg.as_string())       
 
 
 
