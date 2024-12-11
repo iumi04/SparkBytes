@@ -42,7 +42,7 @@ export default function Login() {
       if (response.ok) {
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("user_type", data.role);
-        login(data.role as 'student' | 'event_organiser', data.access_token);
+        // login(data.role as 'student' | 'event_organiser', data.access_token, data.logged_in_user_id);
 
         const fetchUserId = async () => {
           const token = data.access_token;
@@ -57,6 +57,7 @@ export default function Login() {
             if (whoamiResponse.ok) {
               const whoamiData = await whoamiResponse.json();
               console.log("Logged-in user ID:", whoamiData.logged_in_user_id);
+              login(data.role as 'student' | 'event_organiser', data.access_token, whoamiData.logged_in_user_id);
             } else {
               console.error(
                 "Failed to fetch user ID:",

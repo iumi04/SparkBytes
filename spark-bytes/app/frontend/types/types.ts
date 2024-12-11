@@ -9,6 +9,7 @@ export interface Event {
     area: string;
     tags: string[];
     image_url: string;
+    created_by: string;
 }
   
 export interface EventResponse {

@@ -153,6 +153,7 @@ def get_events():
                 "endTime": event.get("endTime"),
                 "tags": event.get("tags", []),  
                 "image_url": event.get("image_url"),
+                "created_by": event.get("created_by")
             }
             events_list.append(event_data)
 

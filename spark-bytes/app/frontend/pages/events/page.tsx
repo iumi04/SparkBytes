@@ -68,12 +68,25 @@ export default function Events() {
     return areaMatch && foodPreferenceMatch;
   });
 
+  // Sort filtered events by latest date first and earliest time
+  const sortedEvents = filteredEvents.sort((a, b) => {
+    const dateA = new Date(`${a.date}T${a.startTime}`);
+    const dateB = new Date(`${b.date}T${b.startTime}`);
+
+    // First compare dates in descending order
+    if (dateA < dateB) return 1; // dateA is earlier than dateB
+    if (dateA > dateB) return -1; // dateA is later than dateB
+
+    // If dates are the same, compare times in ascending order
+    return dateA.getTime() - dateB.getTime(); // Sort by time ascending
+  });
+
   const [currentPage, setCurrentPage] = useState(1); 
   const eventsPerPage = 9; 
 
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
-  const currentEvents = filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent); 
+  const currentEvents = sortedEvents.slice(indexOfFirstEvent, indexOfLastEvent); 
 
   const totalPages = Math.ceil(filteredEvents.length / eventsPerPage);
 

@@ -4,11 +4,13 @@ import Header from "../../components/Header";
 import StudentHeader from "../../components/StudentHeader";
 import EventOrganizerHeader from "../../components/EventOrganizerHeader"; 
 import Foot from "../../components/Foot";
-import { Image, Button, Modal } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';
 import { useState, useEffect } from "react";
 import { useUser } from '../../context/UserContext'; 
 import { useRouter } from "next/navigation";
+import EventCard from "../../components/EventCard";
+import { Event } from '../../types/types';
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -16,41 +18,52 @@ const nunito = Nunito({
 });
 
 export default function ManageEvents() {
-  const { isLoggedIn, userType } = useUser(); 
+  const { isLoggedIn, userType, userId } = useUser(); 
+  console.log("userId:" + userId);
   const router = useRouter();
-  const [events, setEvents] = useState<any[]>([]); 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<any>(null); 
+  const [userEvents, setUserEvents] = useState<Event[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const eventsPerPage = 5;
 
   useEffect(() => {
-    if (!isLoggedIn || userType?.toLowerCase() !== 'event organiser') {
+    if (!isLoggedIn || userType?.toLowerCase() !== 'event organizer') {
         router.push('/');
     }
   }, [isLoggedIn, userType, router]);
 
-  const openModal = (event: any) => {
-    setSelectedEvent(event);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedEvent(null);
-  };
-
   useEffect(() => {
-    const fetchEvents = async () => {
+    const fetchUserEvents = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5000/get_events"); 
+        const response = await fetch("http://127.0.0.1:5000/get_events");
         const data = await response.json();
-        setEvents(data);
+        console.log("Fetched events:", data);
+        const filteredEvents = data.filter((event: Event) => event.created_by === userId);
+        console.log("Filtered events for userId:", userId, filteredEvents);
+        
+        // Sort events by date (latest first) and then by time (earliest first)
+        const sortedEvents = filteredEvents.sort((a: Event, b: Event) => {
+          const dateA = new Date(`${a.date}T${a.startTime}`);
+          const dateB = new Date(`${b.date}T${b.startTime}`);
+          return dateB.getTime() - dateA.getTime(); // Sort by date descending
+        });
+        
+        setUserEvents(sortedEvents);
       } catch (error) {
-        console.error("Error fetching events:", error);
+        console.error("Error fetching user events:", error);
       }
     };
 
-    fetchEvents();
-  }, []);
+    fetchUserEvents();
+  }, [userId]);
+
+  const indexOfLastEvent = currentPage * eventsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+  const currentEvents = userEvents.slice(indexOfFirstEvent, indexOfLastEvent);
+  const totalPages = Math.ceil(userEvents.length / eventsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const renderHeader = () => {
     if (isLoggedIn) {
@@ -59,7 +72,6 @@ export default function ManageEvents() {
     return <Header />;
   };
 
-  // Inside your ManageEvents component
   return (
     <>
       {renderHeader()}
@@ -94,28 +106,30 @@ export default function ManageEvents() {
               Add Event
             </Button>
           </div>
+
+          {/* Your Events Section */}
+          <div className="text-center mb-16">
+            <h2 className="text-2xl font-semibold text-primary mb-4">Your Events</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {currentEvents.map((event) => (
+                <EventCard key={event.id} event={event} router={router} />
+              ))}
+            </div>
+            {/* Pagination Controls */}
+            <div className="flex justify-center mt-4">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <Button
+                  key={index + 1}
+                  onClick={() => handlePageChange(index + 1)}
+                  className={`mx-1 ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+                >
+                  {index + 1}
+                </Button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* Modal for Event Details */}
-      {selectedEvent && (
-        <Modal open={isModalOpen} onClose={closeModal}>
-          <Modal.Header>
-            <h3>{selectedEvent.title}</h3>
-          </Modal.Header>
-          <Modal.Body>
-            <p><strong>Date:</strong> {selectedEvent.date}</p>
-            <p><strong>Location:</strong> {selectedEvent.location}</p>
-            <p>{selectedEvent.details}</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button auto flat color="error" onClick={closeModal}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      )}
-
       <Foot />
     </>
   );

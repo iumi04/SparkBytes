@@ -52,7 +52,7 @@ export default function AddEvent() {
 
   useEffect(() => {
     if (!loading) {
-      if (!isLoggedIn || userType?.toLowerCase() !== 'event organiser') {
+      if (!isLoggedIn || userType?.toLowerCase() !== 'event organizer') {
         router.push('/frontend/pages/events'); 
       }
     }
