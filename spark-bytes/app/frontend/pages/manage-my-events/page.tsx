@@ -26,6 +26,7 @@ export default function ManageEvents() {
   const eventsPerPage = 5;
 
   useEffect(() => {
+    //make sure they are the event organizer, else dont let them access
     if (!isLoggedIn || userType?.toLowerCase() !== 'event organizer') {
         router.push('/');
     }
@@ -38,11 +39,11 @@ export default function ManageEvents() {
         const data = await response.json();
         const filteredEvents = data.filter((event: Event) => event.created_by === userId);
         
-        // Sort events by date (latest first) and then by time (earliest first)
+        //used to sort events by date (latest first) and then by time (earliest first)
         const sortedEvents = filteredEvents.sort((a: Event, b: Event) => {
           const dateA = new Date(`${a.date}T${a.startTime}`);
           const dateB = new Date(`${b.date}T${b.startTime}`);
-          return dateB.getTime() - dateA.getTime(); // Sort by date descending
+          return dateB.getTime() - dateA.getTime(); //sort by date descending
         });
         
         setUserEvents(sortedEvents);
@@ -59,12 +60,14 @@ export default function ManageEvents() {
   const currentEvents = userEvents.slice(indexOfFirstEvent, indexOfLastEvent);
   const totalPages = Math.ceil(userEvents.length / eventsPerPage);
 
+  //page change make sure it works
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
   const renderHeader = () => {
     if (isLoggedIn) {
+      //same logic as my events, appropriate header
       return userType === 'student' ? <StudentHeader /> : <EventOrganizerHeader />;
     }
     return <Header />;
@@ -81,7 +84,7 @@ export default function ManageEvents() {
         }}
       >
         <div className="max-w-7xl mx-auto space-y-12">
-          {/* Section Title with Background Box */}
+          {/*gray background box; blend w/ background*/}
           <div className="bg-gray-800 bg-opacity-80 text-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto mb-8">
             <div className="text-center">
               <h1 className="text-4xl font-semibold text-primary mb-4">
@@ -93,11 +96,11 @@ export default function ManageEvents() {
             </div>
           </div>
 
-          {/* Add Event Button with gap from the background box */}
+          {/*"Add Event" button margin*/}
           <div className="text-center mb-16">
             <Button 
               as="a"
-              href="/frontend/pages/add-event" // Link to the Add Event page
+              href="/frontend/pages/add-event" 
               color="primary" 
               className="text-lg py-2 px-6 rounded-full"
             >
@@ -105,7 +108,8 @@ export default function ManageEvents() {
             </Button>
           </div>
 
-          {/* Your Events Section */}
+          {/*events grid similar to events page*/}
+          {/*only events they created are displayed*/}
           <div className="text-center mb-16">
             <h2 className="text-2xl font-semibold text-primary mb-4">Your Events</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -113,7 +117,7 @@ export default function ManageEvents() {
                 <EventCard key={event.id} event={event} router={router} />
               ))}
             </div>
-            {/* Pagination Controls */}
+            {/*page control from events page*/}
             <div className="flex justify-center mt-4">
               {Array.from({ length: totalPages }, (_, index) => (
                 <Button
