@@ -6,7 +6,7 @@ import { Nunito } from 'next/font/google';
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
+import { Checkbox, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";  // Import Checkbox component
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -20,12 +20,13 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmpassword] = useState("");
   const [role, setRole] = useState("student");
+  const [receiveEmails, setReceiveEmails] = useState(false);  // Boolean value for checkbox
   const [error, setError] = useState("");
 
   const handleSignup = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (!username || !password || !username) {
+    if (!username || !password || !email) {
       setError("Email, username, and password are required");
       return;
     }
@@ -41,7 +42,7 @@ export default function Signup() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password, role, email }),
+        body: JSON.stringify({ username, password, role, email, receiveEmails }),  // Include the receiveEmails state
       });
 
       const data = await response.json();
@@ -117,6 +118,20 @@ export default function Signup() {
             onChange={(e) => setConfirmpassword(e.target.value)}
             className="mb-5"
           />
+
+          {/* Single Checkbox for receiving emails about events */}
+          <div className="mb-5 flex items-center">
+            <Checkbox 
+              isChecked={receiveEmails} 
+              onChange={(e) => setReceiveEmails(e.target.checked)} 
+              color="primary"
+              className="text-black"
+            />
+            <label htmlFor="receiveEmails" className="ml-2 text-sm text-black">
+              I would like to receive emails about events
+            </label>
+          </div>
+
           <Dropdown>
             <DropdownTrigger>
               <Button className="w-full">Register as: {role.charAt(0).toUpperCase() + role.slice(1)}</Button>
@@ -126,6 +141,7 @@ export default function Signup() {
               <DropdownItem className="text-black" onClick={() => setRole("event_organiser")}>Event Organiser</DropdownItem>
             </DropdownMenu>
           </Dropdown>
+
           <Button 
             color="primary" 
             className="mt-4 w-full"
@@ -133,7 +149,9 @@ export default function Signup() {
           >
             Signup
           </Button>
+
           {error && <p className="mt-3 text-red-500 text-center">{error}</p>}
+
           <div className="flex justify-between mt-5">
             <Link 
               href="/" 
