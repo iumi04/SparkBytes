@@ -9,6 +9,8 @@ import { Nunito } from 'next/font/google';
 import { useState, useEffect } from "react";
 import { useUser } from '../../context/UserContext'; 
 import { useRouter } from "next/navigation";
+import EventCard from "../../components/EventCard";
+import { Event } from "../../types/types";
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -16,12 +18,14 @@ const nunito = Nunito({
 });
 
 export default function MyEvents() {
-  const { isLoggedIn, userType } = useUser(); 
+  const { isLoggedIn, userType, userId } = useUser(); 
   const router = useRouter();
   const [events, setEvents] = useState<any[]>([]); 
+  const [currentPage, setCurrentPage] = useState(1);
+  const eventsPerPage = 5;
 
   useEffect(() => {
-    if (!isLoggedIn || userType?.toLowerCase() !== 'student') {
+    if (!isLoggedIn) {
         alert("You are not allowed to view this page.");
         router.push('/');
     }
@@ -30,16 +34,31 @@ export default function MyEvents() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5000/get_events"); 
+        const response = await fetch("http://127.0.0.1:5000/get_events");
         const data = await response.json();
-        setEvents(data);
+        console.log(data);
+        console.log("userId: " + userId);
+        const filteredEvents = data.filter((event: Event) => 
+          userId && Array.isArray(event.signed_up_by) && event.signed_up_by.includes(String(userId))
+        );
+        console.log("filteredEvents: "+filteredEvents );
+        setEvents(filteredEvents);
       } catch (error) {
         console.error("Error fetching events:", error);
       }
     };
 
     fetchEvents();
-  }, []);
+  }, [userId]);
+
+  const indexOfLastEvent = currentPage * eventsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
+  const totalPages = Math.ceil(events.length / eventsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const renderHeader = () => {
     if (isLoggedIn) {
@@ -63,41 +82,26 @@ export default function MyEvents() {
               Here you can see all the events that you have signed up for and cancel any events you will no longer be attending.
             </p>
           </div>
-          
 
-          {/* Events Grid 
+          {/* Events Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {events.map((event) => (
-              <div key={event._id} className="bg-gray-800 bg-opacity-80 p-6 rounded-2xl shadow-lg backdrop-blur-md flex flex-col h-auto">
-                <div className="flex-1 mb-4">
-                  <Image
-                    className="dark:invert rounded-lg object-cover object-center"
-                    src="/spark_bytes.jpeg" 
-                    alt={event.title}
-                    width="100%"
-                    height="150px" // Change img height here
-                  />
-                </div>
-                <div className="flex-1 text-center lg:text-left mb-4">
-                  <h2 className={`text-2xl font-semibold text-primary mb-2`}>
-                    {event.title}
-                  </h2>
-                  <p className={`text-lg mb-4`}>
-                    {event.description}
-                  </p>
-                  <Button 
-                    as="a"
-                    href={`/frontend/pages/manage-events/${event._id}`} 
-                    color="primary" 
-                    className="text-lg py-2 px-6 rounded-full"
-                  >
-                    Manage Event
-                  </Button>
-                </div>
-              </div>
+            {currentEvents.map((event) => (
+              <EventCard key={event._id} event={event} router={router} />
             ))}
           </div>
-          */}
+
+          {/* Pagination Controls */}
+          <div className="flex justify-center mt-4">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index + 1}
+                onClick={() => handlePageChange(index + 1)}
+                className={`mx-1 ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+              >
+                {index + 1}
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
       <Foot />

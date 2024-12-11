@@ -33,10 +33,12 @@ events_collection = events_db["sparkbytes"]
 app.config["JWT_SECRET_KEY"] = "nobucketsumi" 
 jwt = JWTManager(app)
 
+# This is the route for the home page, this returns a simple message indicating that the server is up and running
 @app.route("/")
 def home():
     return "Server Running"
 
+# This is the route for user signup, it handles both OPTIONS (preflight) and POST requests
 @app.route("/signup", methods=["OPTIONS", "POST"])
 def signup():
     if request.method == "OPTIONS":
@@ -73,6 +75,7 @@ def signup():
 
     return jsonify({"msg": "User created successfully"}), 201
 
+# This is the route that handles user login, handles POST requests to authenticate users
 @app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -96,11 +99,13 @@ def login():
     return jsonify({"access_token": access_token, "role": user["role"]}), 200
 
 
+# This is the route for a protected resource, and it requires a valid JWT token to access
 @app.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
     return jsonify(message="This is a protected route"), 200
 
+# This is the route to get a list of all users from the database (for our testing purposes)
 @app.route("/get_users", methods=["GET"])
 def get_users():
     try:
@@ -121,6 +126,7 @@ def get_users():
         return jsonify({"msg": "Error retrieving users", "error": str(e)}), 500
     
 
+# This is the route to get login information for all users (mainly for testing purposes)
 @app.route("/get-login", methods=["GET"])
 def get_login():
     try:
@@ -135,6 +141,7 @@ def get_login():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+# This is the route to get a list of all events from the database
 @app.route("/get_events", methods=["GET"])
 def get_events():
     try:
@@ -153,7 +160,8 @@ def get_events():
                 "endTime": event.get("endTime"),
                 "tags": event.get("tags", []),  
                 "image_url": event.get("image_url"),
-                "created_by": event.get("created_by")
+                "created_by": event.get("created_by"),
+                "signed_up_by": event.get("signed_up_by")
             }
             events_list.append(event_data)
 
@@ -167,6 +175,7 @@ UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
+# This is the route to create a new event, which requires a valid JWT token to access
 @app.route("/events", methods=["POST"])
 @jwt_required()
 def create_event():
@@ -212,7 +221,8 @@ def create_event():
             "location": data["location"],
             "tags": data["tags"].split(","), 
             "area": data["area"],
-            "created_by": user_id
+            "created_by": user_id,
+            "signed_up_by": []
         }
 
         if image_path:
@@ -229,12 +239,14 @@ def create_event():
         return jsonify({"msg": "Internal Server Error"}), 500
 
 
+# Route to get the currently logged-in user's ID, also requires a valid JWT token
 @app.route("/whoami", methods=["GET"])
 @jwt_required()
 def who_am_i():
     user_id = get_jwt_identity()
     return jsonify({"logged_in_user_id": user_id}), 200
 
+# Route for users to sign up for an event, also requires a valid JWT token
 @app.route("/signup_event", methods=["POST"])
 @jwt_required()
 def signup_event():
@@ -252,14 +264,19 @@ def signup_event():
         if not event:
             return jsonify({"msg": "Event not found"}), 404
 
-        if user_id not in event.get("signed_up_users", []):
+        print("Current signed_up_users:", event.get("signed_up_by", []))  # Log current signed_up_users
+
+        if user_id not in event.get("signed_up_by", []):
+            print(f"User {user_id} is signing up for event {event_id}.")  # Log user signing up
             events_collection.update_one(
                 {"_id": ObjectId(event_id)},
-                {"$push": {"signed_up_users": user_id}}
+                {"$addToSet": {"signed_up_by": user_id}}
             )
+            print("Updated signed_up_users:", event.get("signed_up_by", []))  # Log updated signed_up_users
 
         user = loginInfo_collection.find_one({"_id": ObjectId(user_id)})
         if event_id not in user.get("signed_up_events", []):
+            print(f"User {user_id} is being added to signed_up_events for event {event_id}.")  # Log user event signup
             loginInfo_collection.update_one(
                 {"_id": ObjectId(user_id)},
                 {"$push": {"signed_up_events": event_id}}
@@ -276,6 +293,7 @@ def signup_event():
         print("Error occurred:", str(e))
         return jsonify({"msg": "Internal Server Error from backend", "error": str(e)}), 500
 
+# Function to send email notifications to users when they sign up for an event
 def send_email_notification(user_email, event):
     subject = f"Reminder: {event['title']} starts soon!"
     body = f"""
@@ -304,9 +322,6 @@ def send_email_notification(user_email, event):
         server.starttls()
         server.login(EMAIL_USERNAME, EMAIL_PASSWORD)
         server.sendmail(EMAIL_USERNAME, user_email, msg.as_string())       
-
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)   

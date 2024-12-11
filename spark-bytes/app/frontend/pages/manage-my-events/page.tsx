@@ -36,9 +36,7 @@ export default function ManageEvents() {
       try {
         const response = await fetch("http://127.0.0.1:5000/get_events");
         const data = await response.json();
-        console.log("Fetched events:", data);
         const filteredEvents = data.filter((event: Event) => event.created_by === userId);
-        console.log("Filtered events for userId:", userId, filteredEvents);
         
         // Sort events by date (latest first) and then by time (earliest first)
         const sortedEvents = filteredEvents.sort((a: Event, b: Event) => {
