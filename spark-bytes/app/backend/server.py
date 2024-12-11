@@ -7,6 +7,8 @@ from flask_jwt_extended import get_jwt_identity
 from flask_cors import CORS
 import re
 import os
+from bson import ObjectId
+
 
 app = Flask(__name__)
 
@@ -223,6 +225,43 @@ def create_event():
 def who_am_i():
     user_id = get_jwt_identity()
     return jsonify({"logged_in_user_id": user_id}), 200
+
+@app.route("/signup_event", methods=["POST"])
+@jwt_required()
+def signup_event():
+    try:
+        data = request.get_json()
+        
+        user_id = get_jwt_identity()  
+        event_id = data.get("event_id")
+        print("event_id:", event_id)
+
+        if not event_id:
+            return jsonify({"msg": "Event ID is required"}), 400
+
+        event = events_collection.find_one({"_id": ObjectId(event_id)})
+        if not event:
+            return jsonify({"msg": "Event not found"}), 404
+
+        if user_id not in event.get("signed_up_users", []):
+            events_collection.update_one(
+                {"_id": ObjectId(event_id)},
+                {"$push": {"signed_up_users": user_id}}
+            )
+
+        user = loginInfo_collection.find_one({"_id": ObjectId(user_id)})
+        if event_id not in user.get("signed_up_events", []):
+            loginInfo_collection.update_one(
+                {"_id": ObjectId(user_id)},
+                {"$push": {"signed_up_events": event_id}}
+            )
+
+        return jsonify({"msg": "Successfully signed up for the event"}), 200
+
+    except Exception as e:
+        print("Error occurred:", str(e))
+        return jsonify({"msg": "Internal Server Error from backend", "error": str(e)}), 500
+
 
 
 

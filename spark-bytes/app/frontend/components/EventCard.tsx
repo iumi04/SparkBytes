@@ -22,13 +22,50 @@ const EventCard: React.FC<EventCardProps> = ({ event, router }) => {
   const formattedEndTime = new Date(`${event.date}T${event.endTime}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   const { isLoggedIn } = useUser();
 
-  const handleSignUpClick = (e: React.MouseEvent) => {
+  // console.log("Event Data from here!:", event); 
+  // console.log("Event ID:", event.id);
+
+  const handleSignUpClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    console.log("Event data when Sign Up is clicked:", event); 
+  console.log("Event ID when Sign Up is clicked:", event.id);
+
     if (!isLoggedIn) {
       alert("You must sign in to sign up for events.");
       router.push("/frontend/pages/login");
-    } else {
-      alert(`Signed up for ${event.title}`);
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must be logged in to sign up for events.");
+      router.push("/frontend/pages/login");
+      return;
+    }
+
+    try {
+      const requestData = { event_id: event.id }; 
+      console.log("Sending data:", requestData);
+
+      const response = await fetch("http://127.0.0.1:5000/signup_event", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, 
+        },
+        body: JSON.stringify(requestData), 
+      });
+
+      if (response.ok) {
+        alert(`Successfully signed up for ${event.title}`);
+      } else {
+        const errorData = await response.json();
+        alert(`Failed to sign up for the event: ${errorData.msg || "Unknown error"}`);
+      }
+    } catch (error) {
+      console.error("Error signing up for the event:", error);
+      alert("An error occurred while signing up for the event. Please try again.");
     }
   };
 
