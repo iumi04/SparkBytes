@@ -23,8 +23,16 @@ export default function About() {
       ) : (
         <Header />
       )}
-      <div className="flex items-center justify-center min-h-screen bg-background text-foreground p-8 pt-32">
-        <div className="flex flex-col w-full max-w-5xl space-y-12">
+      <div
+        className="flex items-center justify-center min-h-screen p-8 pt-32"
+        style={{
+          backgroundImage: "url('/USA_Boston_Houses_Street_Snow_Street_lights_609243_1920x1080.jpg')", // Set background image
+          backgroundSize: 'cover', // Make sure it covers the entire container
+          backgroundPosition: 'center', // Center the image
+          backgroundAttachment: 'fixed', // Keep the background fixed during scrolling
+        }}
+      >
+        <div className="flex flex-col w-full max-w-5xl space-y-12 bg-opacity-80 p-8 rounded-lg shadow-lg">
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
             <div className="flex-1">
               <Image
@@ -36,10 +44,10 @@ export default function About() {
               />
             </div>
             <div className="flex-1 text-center lg:text-left">
-              <h1 className={`text-4xl font-semibold text-primary mb-4 ${nunito.className}`}>
+              <h1 className={`text-4xl font-semibold text-white mb-4 ${nunito.className}`}>
                 About Spark! Bytes
               </h1>
-              <div className={`font-nunito text-lg p-6 bg-gray-800 bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-md space-y-6`}>
+              <div className={`font-nunito text-lg p-6 bg-gray-800 bg-opacity-70 text-white rounded-2xl shadow-lg backdrop-blur-md space-y-6`}>
                 <p>
                   Spark! Bytes is a revolutionary platform built for the Boston University community. Our mission is
                   to reduce food waste and provide free meals to students. After events, any leftover food can be posted
@@ -58,21 +66,24 @@ export default function About() {
             </div>
           </div>
 
+          {/* Join the Movement Section */}
           <div className="text-center mt-12">
-            <h2 className={`text-2xl font-semibold text-primary mb-4 ${nunito.className}`}>
-              Join the Movement
-            </h2>
-            <p className={`font-nunito text-lg max-w-2xl mx-auto`}>
-              Be a part of the change! Sign up today to donate food or claim free meals. Together, we can reduce waste
-              and help one another. Let's make BU a more sustainable place, one meal at a time.
-            </p>
-            <div className="mt-8">
-              <a
-                href="/frontend/pages/signup" //link to login/register pg when we make it <<IMPORTANT>>
-                className="bg-blue-500 text-white py-2 px-6 rounded-full text-lg hover:bg-blue-600 transition duration-300"
-              >
-                Get Started
-              </a>
+            <div className="bg-gray-800 bg-opacity-90 text-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto">
+              <h2 className={`text-2xl font-semibold mb-4 ${nunito.className}`}>
+                Join the Movement
+              </h2>
+              <p className={`font-nunito text-lg max-w-2xl mx-auto mb-6`}>
+                Be a part of the change! Sign up today to donate food or claim free meals. Together, we can reduce waste
+                and help one another. Let's make BU a more sustainable place, one meal at a time.
+              </p>
+              <div className="mt-8">
+                <a
+                  href="/frontend/pages/signup" //link to login/register pg when we make it <<IMPORTANT>>
+                  className="bg-blue-500 text-white py-2 px-6 rounded-full text-lg hover:bg-blue-600 transition duration-300"
+                >
+                  Get Started
+                </a>
+              </div>
             </div>
           </div>
         </div>
