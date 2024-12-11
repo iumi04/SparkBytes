@@ -125,18 +125,10 @@ def get_login():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
- # "get all events"
 @app.route("/get_events", methods=["GET"])
-@jwt_required()
 def get_events():
     try:
         events = events_collection.find()
-        user_id = get_jwt_identity()
-
-        try:
-            user_id = ObjectId(user_id)
-        except Exception:
-            return jsonify({"msg": "Invalid user ID"}), 400
 
         events_list = []
         for event in events:
@@ -151,13 +143,13 @@ def get_events():
                 "endTime": event.get("endTime"),
                 "tags": event.get("tags", []),  
                 "image_url": event.get("image_url"),
-                "created_by": user_id
             }
             events_list.append(event_data)
 
         return jsonify(events_list), 200
     except Exception as e:
         return jsonify({"msg": "Error retrieving events", "error": str(e)}), 500
+
 
 
 UPLOAD_FOLDER = "uploads"
