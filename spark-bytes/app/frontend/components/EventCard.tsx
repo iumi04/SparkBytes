@@ -29,7 +29,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, router }) => {
     e.stopPropagation();
 
     console.log("Event data when Sign Up is clicked:", event); 
-  console.log("Event ID when Sign Up is clicked:", event.id);
+    console.log("Event ID when Sign Up is clicked:", event.id);
 
     if (!isLoggedIn) {
       alert("You must sign in to sign up for events.");

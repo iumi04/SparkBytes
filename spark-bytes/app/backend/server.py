@@ -153,7 +153,8 @@ def get_events():
                 "endTime": event.get("endTime"),
                 "tags": event.get("tags", []),  
                 "image_url": event.get("image_url"),
-                "created_by": event.get("created_by")
+                "created_by": event.get("created_by"),
+                "signed_up_by": event.get("signed_up_by")
             }
             events_list.append(event_data)
 
@@ -212,7 +213,8 @@ def create_event():
             "location": data["location"],
             "tags": data["tags"].split(","), 
             "area": data["area"],
-            "created_by": user_id
+            "created_by": user_id,
+            "signed_up_by": []
         }
 
         if image_path:
@@ -252,14 +254,19 @@ def signup_event():
         if not event:
             return jsonify({"msg": "Event not found"}), 404
 
-        if user_id not in event.get("signed_up_users", []):
+        print("Current signed_up_users:", event.get("signed_up_by", []))  # Log current signed_up_users
+
+        if user_id not in event.get("signed_up_by", []):
+            print(f"User {user_id} is signing up for event {event_id}.")  # Log user signing up
             events_collection.update_one(
                 {"_id": ObjectId(event_id)},
-                {"$push": {"signed_up_users": user_id}}
+                {"$addToSet": {"signed_up_by": user_id}}
             )
+            print("Updated signed_up_users:", event.get("signed_up_by", []))  # Log updated signed_up_users
 
         user = loginInfo_collection.find_one({"_id": ObjectId(user_id)})
         if event_id not in user.get("signed_up_events", []):
+            print(f"User {user_id} is being added to signed_up_events for event {event_id}.")  # Log user event signup
             loginInfo_collection.update_one(
                 {"_id": ObjectId(user_id)},
                 {"$push": {"signed_up_events": event_id}}

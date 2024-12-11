@@ -10,6 +10,7 @@ export interface Event {
     tags: string[];
     image_url: string;
     created_by: string;
+    signed_up_by: string[];
 }
   
 export interface EventResponse {

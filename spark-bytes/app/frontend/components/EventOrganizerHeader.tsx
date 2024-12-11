@@ -39,6 +39,11 @@ export default function EventOrganizerHeader() {
           manage my events
         </Link>
       </NavbarItem>
+      <NavbarItem>
+        <Link href="/frontend/pages/my-events" className="text-white hover:text-blue-400 duration-300 font-nunito font-semibold">
+          my events
+        </Link>
+      </NavbarItem>
       {isLoggedIn && (
         <NavbarItem>
           <button
