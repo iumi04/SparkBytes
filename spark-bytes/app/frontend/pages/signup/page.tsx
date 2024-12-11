@@ -138,7 +138,7 @@ export default function Signup() {
             </DropdownTrigger>
             <DropdownMenu aria-label="Select Role">
               <DropdownItem key="student" className="text-black" onClick={() => setRole("student")}>Student</DropdownItem>
-              <DropdownItem key="event-organizer" className="text-black" onClick={() => setRole("event organizer")}>Event Organizer</DropdownItem>
+              <DropdownItem key="event-organizer" className="text-black" onClick={() => setRole("event Organizer")}>Event Organizer</DropdownItem>
             </DropdownMenu>
           </Dropdown>
 
