@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Spark! Bytes
+
+Spark! Bytes' mission is to reduce food waste and promote sustainability on our campus. We aim to connect leftover food from events with hungry students in need of free food. Spark! Bytes is a web application built with Next.js for the frontend and Flask for the backend. The application allows two types of users. Event Organizers and Students. Event Organizers are able to create events. While Students and Event Organizers are both able to sign up for events, and view their signed-up events. It also allows for filtering by food type and location on the BU campus. It utilizes MongoDB for data storage and JWT for user authentication.
+
+## Table of Contents
+
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+- [Frontend Setup](#frontend-setup)
+- [Backend Setup](#backend-setup)
+- [API Endpoints](#api-endpoints)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+
+- User authentication (signup and login)
+- Event creation and management
+- User can sign up for events
+- View signed-up events
+- Email notifications for event sign-ups
+
+## Technologies Used
+
+- **Frontend:** Next.js, React, NextUI
+- **Backend:** Flask, Flask-JWT-Extended, Flask-CORS
+- **Database:** MongoDB
+- **Authentication:** JWT
+- **Email Service:** SMTP (Gmail)
 
 ## Getting Started
 
-First, run the development server:
+To get a copy of this project up and running on your local machine, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Frontend Setup
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Clone the repository:**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   ```bash
+   git clone https://github.com/yourusername/spark-bytes.git
+   cd spark-bytes/app/frontend
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Install dependencies:**
 
-## Learn More
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. **Run the development server:**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. **Open your browser and navigate to:**
+   ```
+   http://localhost:3000
+   ```
 
-## Deploy on Vercel
+### Backend Setup
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Navigate to the backend directory:**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```bash
+   cd spark-bytes/app/backend
+   ```
+
+2. **Install dependencies:**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Set up environment variables:**
+
+   - Create a `.env` file and add your MongoDB URI and email credentials.
+
+4. **Run the Flask server:**
+
+   ```bash
+   python server.py
+   ```
+
+5. **The backend will be running at:**
+   ```
+   http://127.0.0.1:5000
+   ```
+
+## API Endpoints
+
+- **GET /**: Home route, returns a simple message indicating the server is running.
+- **POST /signup**: User signup endpoint.
+- **POST /login**: User login endpoint.
+- **GET /get_events**: Retrieve all events.
+- **POST /events**: Create a new event.
+- **POST /signup_event**: Sign up for an event.
+- **GET /whoami**: Get the currently logged-in user's ID.

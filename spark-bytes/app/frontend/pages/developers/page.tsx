@@ -35,7 +35,7 @@ export default function Developers() {
             <div className="flex flex-col md:flex-row items-center justify-center animate-blurIn space-x-8">
               <Image
                 className="rounded-full object-cover w-32 h-32 mb-4 md:mb-0"
-                src="/developer1.jpg" // Replace with actual developer photo
+                src="/Umi_pic.jpg" 
                 alt="Developer 1"
                 width={128}
                 height={128}
@@ -55,7 +55,7 @@ export default function Developers() {
             <div className="flex flex-col md:flex-row items-center justify-center animate-blurIn space-x-8">
               <Image
                 className="rounded-full object-cover w-32 h-32 mb-4 md:mb-0"
-                src="/developer2.jpg" // Replace with actual developer photo
+                src="/Aiden_pic.jpg" 
                 alt="Developer 2"
                 width={128}
                 height={128}
@@ -75,7 +75,7 @@ export default function Developers() {
             <div className="flex flex-col md:flex-row items-center justify-center animate-blurIn space-x-8">
               <Image
                 className="rounded-full object-cover w-32 h-32 mb-4 md:mb-0"
-                src="/developer3.jpg" // Replace with actual developer photo
+                src="/Peachy_pic.jpg" 
                 alt="Developer 3"
                 width={128}
                 height={128}
@@ -95,7 +95,7 @@ export default function Developers() {
             <div className="flex flex-col md:flex-row items-center justify-center animate-blurIn space-x-8">
               <Image
                 className="rounded-full object-cover w-32 h-32 mb-4 md:mb-0"
-                src="/developer4.jpg" // Replace with actual developer photo
+                src="/Martin_pic.jpg" 
                 alt="Developer 4"
                 width={128}
                 height={128}
