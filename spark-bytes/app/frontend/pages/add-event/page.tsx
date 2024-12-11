@@ -163,8 +163,16 @@ export default function AddEvent() {
   return (
     <>
       {renderHeader()}
-      
-      <div className={`flex items-center justify-center min-h-screen p-8 bg-background text-foreground ${nunito.className} mt-24`}>
+
+      <div
+  className={`flex items-center justify-center min-h-screen p-8 text-foreground ${nunito.className} mt-24`}
+  style={{
+    backgroundImage: `url('/snowy-boston-university-ycc3rw7yksh50425.jpg')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundAttachment: 'fixed'
+  }}
+>
         <div className="flex flex-col w-full max-w-2xl bg-gray-800 p-6 rounded-lg shadow-md">
           {/* Page Title */}
           <h1 className="text-3xl font-semibold text-primary mb-6 text-center">
