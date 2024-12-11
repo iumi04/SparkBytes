@@ -16,7 +16,7 @@ const nunito = Nunito({
 });
 
 export default function AddEvent() {
-  const { isLoggedIn, userType } = useUser(); // Get user state from context
+  const { isLoggedIn, userType } = useUser(); // Checks the what state the user is in, student or event organizer
   const router = useRouter();
   
   const [loading, setLoading] = useState(true);
@@ -32,7 +32,7 @@ export default function AddEvent() {
     image: null,
   });
 
-  const tagOptions = [
+  const tagOptions = [ //Options for the filters and tags
     "Vegan",
     "Gluten-Free",
     "Dairy-Free",
@@ -62,7 +62,7 @@ export default function AddEvent() {
     return <div>Loading...</div>;
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => { 
     const { name, value } = e.target;
     console.log(name, value)
     setNewEvent((prevState) => ({
@@ -99,7 +99,7 @@ export default function AddEvent() {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async () => { // Makes sure that all of the fields in the page are filled out before an event is allowed to be created
     if (
       newEvent.title &&
       newEvent.description &&
