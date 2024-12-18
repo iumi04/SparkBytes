@@ -1,9 +1,9 @@
-'use client'; // Ensure this is a client component
+'use client'; 
 
-import { useUser } from '../../context/UserContext'; // Import useUser
+import { useUser } from '../../context/UserContext'; //user context stuff to determine what type of user is logged in
 import Header from "../../components/Header";
-import StudentHeader from "../../components/StudentHeader"; // Import StudentHeader
-import EventOrganizerHeader from "../../components/EventOrganizerHeader"; // Import EventOrganizerHeader
+import StudentHeader from "../../components/StudentHeader"; //import both headers -- StudentHeader
+import EventOrganizerHeader from "../../components/EventOrganizerHeader"; //and EventOrganizerHeader here
 import '../../../globals.css';
 import { Image } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';
@@ -16,7 +16,7 @@ const nunito = Nunito({
 });
 
 export default function Developers() {
-  const { isLoggedIn, userType } = useUser(); // Get user state from context
+  const { isLoggedIn, userType } = useUser(); //same functionality (logic) from the other pages
 
   return (
     <>
@@ -29,9 +29,9 @@ export default function Developers() {
         <div className="flex w-full max-w-4xl flex-col items-center">
           <h1 className="text-4xl font-bold mb-8 mt-20">Meet the Developers</h1>
 
-          {/* Developers Grid */}
+          {/*the grid for the developers*/}
           <div className="space-y-12 w-full">
-            {/* Developer 1 */}
+            {/*developer 1: Umi */}
             <div className="flex flex-col md:flex-row items-center justify-center animate-blurIn space-x-8">
               <Image
                 className="rounded-full object-cover w-32 h-32 mb-4 md:mb-0"
@@ -45,13 +45,13 @@ export default function Developers() {
                 <div className="p-2 mt-2 rounded-2xl bg-gradient-to-r from-white/10 to-gray-300">
                   <div className="text-black bg-white rounded-2xl shadow-lg backdrop-blur-md p-4">
                     <p><b>Role:</b> Frontend Developer</p>
-                    <p><b>Bio:</b> Umi is the team leader and spearheaded the frontend. He loves playing basketball and enjoys watching J-Dramas.</p>
+                    <p><b>Bio:</b> Umi is the team leader and spearheaded the frontend. He enjoys coding and loves playing basketball.</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Developer 2 */}
+            {/*developer 2: Aiden*/}
             <div className="flex flex-col md:flex-row items-center justify-center animate-blurIn space-x-8">
               <Image
                 className="rounded-full object-cover w-32 h-32 mb-4 md:mb-0"
@@ -71,7 +71,7 @@ export default function Developers() {
               </div>
             </div>
 
-            {/* Developer 3 */}
+            {/*developer 3: Pranit*/}
             <div className="flex flex-col md:flex-row items-center justify-center animate-blurIn space-x-8">
               <Image
                 className="rounded-full object-cover w-32 h-32 mb-4 md:mb-0"
@@ -85,13 +85,13 @@ export default function Developers() {
                 <div className="p-2 mt-2 rounded-2xl bg-gradient-to-r from-white/10 to-gray-300">
                   <div className="text-black bg-white rounded-2xl shadow-lg backdrop-blur-md p-4">
                     <p><b>Role:</b> Backend Developer</p>
-                    <p><b>Bio:</b> Pranit is responsible for making the app user-friendly and visually appealing, focusing on design consistency.</p>
+                    <p><b>Bio:</b> Pranit is responsible for making the app user-friendly and managing all the data, focusing on keeping the server up.</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Developer 4 */}
+            {/*developer 4: Martin*/}
             <div className="flex flex-col md:flex-row items-center justify-center animate-blurIn space-x-8">
               <Image
                 className="rounded-full object-cover w-32 h-32 mb-4 md:mb-0"
