@@ -53,6 +53,7 @@ const OrganizerEventCard: React.FC<OrganizerEventCardProps> = ({ event, onModify
           <p className="text-black">Tags: {event.tags.length ? event.tags.join(", ") : "No tags available"}</p>
           <p className={`text-black`}>Start Time: {formattedStartTime}</p>
           <p className={`text-black`}>End Time: {formattedEndTime}</p>
+          <p className="text-black">Attendees: {event.signed_up_by?.length || 0}</p>
 
         </CardBody>
         <CardFooter style={{display: 'flex', justifyContent: 'space-between'}}>
