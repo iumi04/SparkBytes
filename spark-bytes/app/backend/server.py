@@ -49,15 +49,29 @@ def signup():
         return response, 200
     
     data = request.get_json()
-
     email = data["email"]
     username = data["username"]
     password = data["password"]
     role = data["role"]
+    receive_emails = data.get("receiveEmails", False) #default email notification set to false
 
+    # passsword requirements verification
+    if len(password) < 8:
+        return jsonify({"msg": "Password must be at least 8 characters long"}), 400
+    
+    if not re.search(r"[A-Z]", password):
+        return jsonify({"msg": "Password must contain at least one uppercase letter"}), 400
+
+    if not re.search(r"\d", password):
+        return jsonify({"msg": "Password must contain at least one number"}), 400
+
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+        return jsonify({"msg": "Password must contain at least one special character"}), 400
+
+    # email requirement verification
     if not re.match(r"^[a-zA-Z0-9._%+-]+@bu\.edu$", email):
         return jsonify({"msg": "Only @bu.edu emails are allowed"}), 400
-
+    
     if not data.get("username") or not data.get("password") or not data.get("email"):
         return jsonify({"msg": "Email and password are required"}), 400
 
@@ -71,7 +85,13 @@ def signup():
 
     hashed_password = bcrypt.hash(password)
 
-    loginInfo_collection.insert_one({"email": email, "username": username, "password": hashed_password, "role": role})
+    loginInfo_collection.insert_one({
+        "email": email, 
+        "username": username, 
+        "password": hashed_password, 
+        "role": role,
+        "receiveEmails": receive_emails
+    })
 
     return jsonify({"msg": "User created successfully"}), 201
 
@@ -118,6 +138,7 @@ def get_users():
                 "email": user.get("email", "No email provided"),
                 "username": user.get("username", "No username provided"),
                 "role": user.get("role", "user"),  
+                "receiveEmails": user.get("receiveEmails", "false")
             })
 
        
@@ -168,7 +189,6 @@ def get_events():
         return jsonify(events_list), 200
     except Exception as e:
         return jsonify({"msg": "Error retrieving events", "error": str(e)}), 500
-
 
 
 UPLOAD_FOLDER = "uploads"
@@ -328,7 +348,7 @@ def update_event(event_id):
         print("Error:", str(e))  # Log the error
         return jsonify({"msg": "Internal Server Error", "error": str(e)}), 500
     
-# delete event route
+# delete event route, requires JWT token
 @app.route("/events/<event_id>", methods=["DELETE"])
 @jwt_required()
 def delete_event(event_id):
@@ -384,6 +404,11 @@ def cancel_registration(event_id):
 
 # This helper function is for sending cancellation emails
 def send_cancellation_email(user_email, event):
+    # check if current user wants emails
+    user = loginInfo_collection.find_one({"email": user_email})
+    if not user or not user.get("receiveEmails", False):
+        return
+    
     subject = f"Registration Cancelled: {event['title']}"
     body = f"""
     Hi there,
@@ -414,6 +439,11 @@ def send_cancellation_email(user_email, event):
 
 # Function to send email notifications to users when they sign up for an event
 def send_email_notification(user_email, event):
+    # check if current user wants emails
+    user = loginInfo_collection.find_one({"email": user_email})
+    if not user or not user.get("receiveEmails", False):
+        return
+
     subject = f"Reminder: {event['title']} starts soon!"
     body = f"""
     Hi there,
