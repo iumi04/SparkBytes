@@ -68,14 +68,14 @@ export default function Events() {
     return areaMatch && foodPreferenceMatch;
   });
 
-  // Sort filtered events by latest date first and earliest time
+  // Sort filtered events by earliest date first and earliest time
   const sortedEvents = filteredEvents.sort((a, b) => {
     const dateA = new Date(`${a.date}T${a.startTime}`);
     const dateB = new Date(`${b.date}T${b.startTime}`);
 
     // First compare dates in descending order
-    if (dateA < dateB) return 1; // dateA is earlier than dateB
-    if (dateA > dateB) return -1; // dateA is later than dateB
+    if (dateA < dateB) return -1; // dateA is earlier than dateB
+    if (dateA > dateB) return 1; // dateA is later than dateB
 
     // If dates are the same, compare times in ascending order
     return dateA.getTime() - dateB.getTime(); // Sort by time ascending
@@ -182,7 +182,7 @@ export default function Events() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center"
             style={{
               rowGap: '1%', 
-              columnGap: '20%',
+              columnGap: '10vw',
             }}>
               {currentEvents.map((event) => (
                 <EventCard key={event.id} event={event} router={router} />

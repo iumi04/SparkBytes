@@ -283,7 +283,7 @@ export default function AddEvent() {
                 id="image"
                 name="image"
                 type="file"
-                accept="image/*" // Area where you can upload an image that will appear on the event card
+                accept="image/*" //area where you can upload an image that will appear on the event card
                 onChange={handleFileChange}
                 className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded"
               />
