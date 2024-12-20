@@ -181,8 +181,8 @@ export default function Events() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center"
             style={{
-              rowGap: '0%', 
-              columnGap: '20%',
+              rowGap: '1%', 
+              columnGap: '10vw',
             }}>
               {currentEvents.map((event) => (
                 <EventCard key={event.id} event={event} router={router} />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Input, Textarea, ModalContent } from "@nextui-org/react";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Input, Textarea, ModalContent, DropdownTrigger, DropdownItem, Dropdown, DropdownMenu } from "@nextui-org/react";
 import { Event } from "../types/types";
 
 interface ModifyEventModalProps {
@@ -15,6 +15,14 @@ const tagOptions = [
   "Gluten-Free",
   "Nut-Free",
   "Meat",
+];
+
+const areaOptions = [
+    "East",
+    "West",
+    "Central",
+    "South",
+    "Else"
 ];
 
 const ModifyEventModal: React.FC<ModifyEventModalProps> = ({ visible, onClose, event }) => {
@@ -87,7 +95,14 @@ const ModifyEventModal: React.FC<ModifyEventModalProps> = ({ visible, onClose, e
   };
 
   return (
-    <Modal isOpen={visible} onClose={onClose}>
+    <Modal 
+    isOpen={visible} 
+    onClose={() => {
+        console.log("Modal onClose triggered");
+        onClose();
+      }}
+    shouldBlockScroll={false}
+    >
       <ModalContent>
         <ModalHeader>
           <h2>Modify Event: {event ? event.title : "Loading..."}</h2>
@@ -141,13 +156,37 @@ const ModifyEventModal: React.FC<ModifyEventModalProps> = ({ visible, onClose, e
                 value={formData.location}
                 onChange={handleInputChange}
               />
-              <Input
-                fullWidth
-                label="Area"
-                name="area"
-                value={formData.area}
-                onChange={handleInputChange}
-              />
+              <div onClick={(e) => e.stopPropagation()}>
+                    <Dropdown>
+                    <DropdownTrigger>
+                        <Button 
+                        variant="bordered" 
+                        className="w-full justify-start"
+                        >
+                        {formData.area || "Select Area"}
+                        </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu 
+                        aria-label="Area selection"
+                        disableAnimation={true}
+                        onAction={(key) => {
+                        setFormData(prev => ({
+                            ...prev!,
+                            area: key.toString()
+                        }));
+                        }}
+                    >
+                        {areaOptions.map((location) => (
+                        <DropdownItem 
+                            key={location}
+                            className="text-black"
+                        >
+                            {location}
+                        </DropdownItem>
+                        ))}
+                    </DropdownMenu>
+                    </Dropdown>
+                </div>
               <div>
                 {tagOptions.map((tag) => (
                   <label key={tag}>

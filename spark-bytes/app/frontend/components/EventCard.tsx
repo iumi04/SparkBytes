@@ -22,9 +22,6 @@ const EventCard: React.FC<EventCardProps> = ({ event, router }) => {
   const formattedEndTime = new Date(`${event.date}T${event.endTime}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   const { isLoggedIn } = useUser();
 
-  // console.log("Event Data from here!:", event); 
-  // console.log("Event ID:", event.id);
-
   const handleSignUpClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
