@@ -23,6 +23,27 @@ export default function Signup() {
   const [receiveEmails, setReceiveEmails] = useState(false);  //boolean value for checkbox from google
   const [error, setError] = useState("");
 
+  const validatePassword = (password: string) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    if (password.length < minLength) {
+      return "Password must be at least 8 characters long";
+    }
+    if (!hasUpperCase) {
+      return "Password must contain at least one uppercase letter";
+    }
+    if (!hasNumber) {
+      return "Password must contain at least one number";
+    }
+    if (!hasSpecialChar) {
+      return "Password must contain at least one special character";
+    }
+    return null;
+  };
+
   const handleSignup = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     //make sure all requirements are met else fail
@@ -33,6 +54,12 @@ export default function Signup() {
 
     if (password !== confirmpassword) {
       setError("Passwords do not match");
+      return;
+    }
+
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
 
