@@ -179,10 +179,10 @@ export default function Events() {
               <Spinner size="lg" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center mr-64"
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center"
             style={{
               rowGap: '0%', 
-              columnGap: '65%',
+              columnGap: '20%',
             }}>
               {currentEvents.map((event) => (
                 <EventCard key={event.id} event={event} router={router} />
