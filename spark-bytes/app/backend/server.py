@@ -20,7 +20,7 @@ SMTP_PORT = 587
 EMAIL_USERNAME = "pranitd23@gmail.com"  
 EMAIL_PASSWORD = "zkrq woxt ioka lwfc" 
 
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://127.0.0.1:3000"]}})
 
 MONGO_URI = "mongodb+srv://pranitd23:2YXiehbHn1BAhYLX@cluster0.ixopq.mongodb.net/?retryWrites=true&w=majority"
 
@@ -292,6 +292,64 @@ def signup_event():
     except Exception as e:
         print("Error occurred:", str(e))
         return jsonify({"msg": "Internal Server Error from backend", "error": str(e)}), 500
+
+@app.before_request
+def log_request_info():
+    print("Authorization header:", request.headers.get("Authorization"))
+
+# Route that allows event organizers to update an event, requires JWT token.
+@app.route("/events/<event_id>", methods=["PUT"])
+@jwt_required()
+def update_event(event_id): 
+    try:
+        current_user_id = get_jwt_identity()  # Validate JWT
+        print("current_user_id:", current_user_id)  # Log the user ID
+
+        data = request.get_json()  # Parse request payload
+        if not data:
+            return jsonify({"msg": "No data provided"}), 400
+
+        event = events_collection.find_one({"_id": ObjectId(event_id)})
+        if not event:
+            return jsonify({"msg": "Event not found"}), 404
+
+        # Update event in the database
+        updated_event = {key: data[key] for key in data if key in event}
+        events_collection.update_one({"_id": ObjectId(event_id)}, {"$set": updated_event})
+
+        # Prepare the updated event response
+        updated_event_response = {**event, **updated_event}
+        updated_event_response["_id"] = str(updated_event_response["_id"])  # Convert ObjectId to string
+        updated_event_response["created_by"] = str(updated_event_response["created_by"])  # Convert ObjectId if applicable
+
+        return jsonify({"msg": "Event updated successfully", "event": updated_event_response}), 200
+    
+    except Exception as e:
+        print("Error:", str(e))  # Log the error
+        return jsonify({"msg": "Internal Server Error", "error": str(e)}), 500
+    
+# delete event route
+@app.route("/events/<event_id>", methods=["DELETE"])
+@jwt_required()
+def delete_event(event_id):
+    try:
+        current_user_id = get_jwt_identity()
+        event = events_collection.find_one({"_id": ObjectId(event_id)})
+
+        if not event:
+            return jsonify({"msg": "Event not found"}), 404
+
+        # Check if the user is authorized to delete this event
+        if event["created_by"] != current_user_id:
+            return jsonify({"msg": "Unauthorized to delete this event"}), 403
+
+        events_collection.delete_one({"_id": ObjectId(event_id)})
+
+        return jsonify({"msg": "Event deleted successfully"}), 200
+
+    except Exception as e:
+        print("Error occurred:", e)
+        return jsonify({"msg": "Internal Server Error", "error": str(e)}), 500
 
 # Function to send email notifications to users when they sign up for an event
 def send_email_notification(user_email, event):

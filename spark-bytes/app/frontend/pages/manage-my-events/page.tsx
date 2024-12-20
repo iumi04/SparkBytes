@@ -9,8 +9,9 @@ import { Nunito } from 'next/font/google';
 import { useState, useEffect } from "react";
 import { useUser } from '../../context/UserContext'; 
 import { useRouter } from "next/navigation";
-import EventCard from "../../components/EventCard";
+import OrganizerEventCard from "../../components/OrganizerEventCard";
 import { Event } from '../../types/types';
+import ModifyEventModal from "../../components/ModifyEventModal";
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -24,6 +25,8 @@ export default function ManageEvents() {
   const [userEvents, setUserEvents] = useState<Event[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 5;
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   useEffect(() => {
     //make sure they are the event organizer, else dont let them access
@@ -73,6 +76,26 @@ export default function ManageEvents() {
     return <Header />;
   };
 
+  const handleModifyClick = (event: Event) => {
+    setSelectedEvent(event);
+    setModalVisible(true);
+  };
+
+  const renderEvents = () => {
+    return userEvents.map((event) => (
+      <OrganizerEventCard 
+        key={event.id} 
+        event={event} 
+        onModify={() => handleModifyClick(event)} 
+        onDelete={(eventId) => {
+          // Handle delete event logic here
+          console.log("Delete event with ID:", eventId);
+          // Implement delete logic, possibly with a confirmation dialog
+        }} 
+      />
+    ));
+  };
+
   return (
     <>
       {renderHeader()}
@@ -113,9 +136,7 @@ export default function ManageEvents() {
           <div className="text-center mb-16">
             <h2 className="text-2xl font-semibold text-primary mb-4">Your Events</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {currentEvents.map((event) => (
-                <EventCard key={event.id} event={event} router={router} />
-              ))}
+              {renderEvents()}
             </div>
             {/*page control from events page*/}
             <div className="flex justify-center mt-4">
@@ -133,6 +154,11 @@ export default function ManageEvents() {
         </div>
       </div>
       <Foot />
+      <ModifyEventModal 
+        visible={modalVisible} 
+        onClose={() => setModalVisible(false)} 
+        event={selectedEvent} 
+      />
     </>
   );
 }
