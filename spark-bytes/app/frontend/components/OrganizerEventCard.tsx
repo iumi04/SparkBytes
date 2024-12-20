@@ -19,6 +19,11 @@ const OrganizerEventCard: React.FC<OrganizerEventCardProps> = ({ event, onModify
     const formattedStartTime = new Date(`${event.date}T${event.startTime}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const formattedEndTime = new Date(`${event.date}T${event.endTime}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+    const handleDeleteClick = () => {
+        if (window.confirm("Are you sure you want to delete this event?")) {
+          onDelete(event.id.toString());
+        }
+      };
 
   return (
     <div style={{ width: "29.5vw", margin: "10px" }}>
@@ -54,7 +59,7 @@ const OrganizerEventCard: React.FC<OrganizerEventCardProps> = ({ event, onModify
           <Button color="secondary" className="mt-2 text-white" onClick={() => onModify(event.id.toString())}>
             Modify
           </Button>
-          <Button color="danger" className="mt-2 text-white" onClick={() => onDelete(event.id.toString())}>
+          <Button color="danger" className="mt-2 text-white" onClick={handleDeleteClick}>
             Delete
           </Button>
         </CardFooter>

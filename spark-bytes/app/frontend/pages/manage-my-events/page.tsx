@@ -87,13 +87,31 @@ export default function ManageEvents() {
         key={event.id} 
         event={event} 
         onModify={() => handleModifyClick(event)} 
-        onDelete={(eventId) => {
-          // Handle delete event logic here
-          console.log("Delete event with ID:", eventId);
-          // Implement delete logic, possibly with a confirmation dialog
-        }} 
+        onDelete={handleDeleteEvent} 
       />
     ));
+  };
+
+  const handleDeleteEvent = async (eventId: string) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/events/${eventId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      alert("Event deleted successfully!");
+      setUserEvents((prevEvents) => prevEvents.filter((event) => event.id.toString() !== eventId));
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      alert("An error occurred while deleting the event.");
+    }
   };
 
   return (

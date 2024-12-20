@@ -339,10 +339,6 @@ def delete_event(event_id):
         if not event:
             return jsonify({"msg": "Event not found"}), 404
 
-        # Check if the user is authorized to delete this event
-        if event["created_by"] != current_user_id:
-            return jsonify({"msg": "Unauthorized to delete this event"}), 403
-
         events_collection.delete_one({"_id": ObjectId(event_id)})
 
         return jsonify({"msg": "Event deleted successfully"}), 200
