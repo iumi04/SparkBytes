@@ -4,13 +4,19 @@ import Header from "../../components/Header";
 import StudentHeader from "../../components/StudentHeader";
 import EventOrganizerHeader from "../../components/EventOrganizerHeader"; 
 import Foot from "../../components/Foot";
-import { Button, Pagination } from "@nextui-org/react";
+
+import { Button, Pagination, Spinner } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';
 import { useState, useEffect } from "react";
 import { useUser } from '../../context/UserContext'; 
 import { useRouter } from "next/navigation";
-import OrganizerEventCard from "../../components/OrganizerEventCard";
+
+// custom event card with modify and delete event buttons
+import OrganizerEventCard from "../../components/OrganizerEventCard"; 
+
 import { Event } from '../../types/types';
+
+// custom modal that pops up when the user clicks modify event
 import ModifyEventModal from "../../components/ModifyEventModal";
 
 const nunito = Nunito({
@@ -19,21 +25,32 @@ const nunito = Nunito({
 });
 
 export default function ManageEvents() {
-  const { isLoggedIn, userType, userId } = useUser(); 
+  const { isLoggedIn, userType, userId } = useUser();  // load context
   const router = useRouter();
   const [userEvents, setUserEvents] = useState<Event[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const eventsPerPage = 9;
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const eventsPerPage = 9; 
+  const [modalVisible, setModalVisible] = useState(false); // modal visibility (modify event)
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null); // to see which event to modify
+  const [isLoading, setIsLoading] = useState(true);
 
+  // check if the user is logged in as the correct user type. If not, push them to the home page.
   useEffect(() => {
-    //make sure they are the event organizer, else dont let them access
-    if (!isLoggedIn || userType?.toLowerCase() !== 'event organizer') {
-        router.push('/');
+    // Wait for authentication to be determined
+    if (isLoggedIn === undefined || userType === undefined) {
+      return;
+    }
+
+    if (!isLoggedIn) {
+      router.push('/');
+    } else if (userType && userType.toLowerCase() !== 'event organizer') {
+      router.push('/');
+    } else if (isLoggedIn) {
+      setIsLoading(false);
     }
   }, [isLoggedIn, userType, router]);
 
+  // fetch events data from the backend, then sort by date
   useEffect(() => {
     const fetchUserEvents = async () => {
       try {
@@ -57,6 +74,20 @@ export default function ManageEvents() {
     fetchUserEvents();
   }, [userId]);
 
+  // spinner animation if the site is loading
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <Spinner 
+          size="lg"
+          color="primary"
+          label="Loading..."
+        />
+      </div>
+    );
+  }
+
+  // for pagination purposes
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
   const currentEvents = userEvents.slice(indexOfFirstEvent, indexOfLastEvent);
@@ -67,6 +98,7 @@ export default function ManageEvents() {
     setCurrentPage(page);
   };
 
+  // render header depending on the type of user
   const renderHeader = () => {
     if (isLoggedIn) {
       //same logic as my events, appropriate header
@@ -75,22 +107,13 @@ export default function ManageEvents() {
     return <Header />;
   };
 
+  // handle when the user clicks modify event
   const handleModifyClick = (event: Event) => {
     setSelectedEvent(event);
     setModalVisible(true);
   };
 
-  const renderEvents = () => {
-    return userEvents.map((event) => (
-      <OrganizerEventCard 
-        key={event.id} 
-        event={event} 
-        onModify={() => handleModifyClick(event)} 
-        onDelete={handleDeleteEvent} 
-      />
-    ));
-  };
-
+  // handle when the user deletes an event
   const handleDeleteEvent = async (eventId: string) => {
     const token = localStorage.getItem("token");
     try {
