@@ -4,12 +4,12 @@ import Header from "../../components/Header";
 import StudentHeader from "../../components/StudentHeader";
 import EventOrganizerHeader from "../../components/EventOrganizerHeader"; 
 import Foot from "../../components/Foot";
-import { Image, Button, Spinner } from "@nextui-org/react";
+import { Image, Button, Spinner, Pagination } from "@nextui-org/react";
 import { Nunito } from 'next/font/google';
 import { useState, useEffect } from "react";
 import { useUser } from '../../context/UserContext'; 
 import { useRouter } from "next/navigation";
-import EventCard from "../../components/EventCard";
+import UserEventCard from "../../components/UserEventCard";
 import { Event } from "../../types/types";
 
 const nunito = Nunito({
@@ -17,12 +17,40 @@ const nunito = Nunito({
   weight: ['400', '700'],
 });
 
+
+
 export default function MyEvents() {
   const { isLoggedIn, userType, userId } = useUser(); 
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true); 
   const [events, setEvents] = useState<any[]>([]); 
   const [currentPage, setCurrentPage] = useState(1);
-  const eventsPerPage = 5;
+  const eventsPerPage = 9;
+
+  const handleCancelRegistration = async (eventId: string) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/cancel_registration/${eventId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId: userId }),
+      });
+  
+      if (response.ok) {
+        // Remove the event from the local state
+        setEvents(events.filter(event => event.id.toString() !== eventId));
+        alert('Registration cancelled successfully');
+      } else {
+        alert('Failed to cancel registration');
+      }
+    } catch (error) {
+      console.error('Error cancelling registration:', error);
+      alert('Error cancelling registration');
+    }
+  };
 
   useEffect(() => {
     //if they arent logged in they should not be able to access this page
@@ -34,30 +62,59 @@ export default function MyEvents() {
 
   useEffect(() => {
     const fetchEvents = async () => {
+      setIsLoading(true);
       try {
-        //fetch event data from database
-        const response = await fetch("http://127.0.0.1:5000/get_events");
-        const data = await response.json();
-        console.log(data);
-        console.log("userId: " + userId);
-        const filteredEvents = data.filter((event: Event) => 
-          userId && Array.isArray(event.signed_up_by) && event.signed_up_by.includes(String(userId))
-        );
-        //filter events
-        console.log("filteredEvents: "+filteredEvents );
-        setEvents(filteredEvents);
+        const response = await fetch("http://127.0.0.1:5000/get_events",{
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (response.ok) {
+          const eventsData = await response.json();
+          // Filter events here inside the useEffect
+          const filtered = eventsData.filter((event: Event) => 
+            userId && Array.isArray(event.signed_up_by) && event.signed_up_by.includes(String(userId))
+          );
+          
+          // Sort events here
+          const sorted = filtered.sort((a: Event, b: Event) => {
+            const dateA = new Date(`${a.date}T${a.startTime}`);
+            const dateB = new Date(`${b.date}T${b.startTime}`);
+
+            // First compare dates in descending order
+            if (dateA < dateB) return 1;
+            if (dateA > dateB) return -1;
+
+            // If dates are the same, compare times in ascending order
+            return dateA.getTime() - dateB.getTime();
+          });
+          
+          setEvents(sorted);
+        } else {
+          console.error("failed to fetch events");
+        }
       } catch (error) {
         console.error("Error fetching events:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchEvents();
   }, [userId]);
 
+  // Remove these lines as they're now handled in the useEffect
+  // const filteredEvents = events.filter((event: Event) => ...
+  // console.log("filteredEvents: "+filteredEvents );
+  // setEvents(filteredEvents);
+  // const sortedEvents = filteredEvents.sort((a, b) => ...
+
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
   const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
   const totalPages = Math.ceil(events.length / eventsPerPage);
+
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -98,25 +155,34 @@ export default function MyEvents() {
         </div>
       </div>
 
-          {/*grid of events here*/}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {currentEvents.map((event) => (
-              <EventCard key={event._id} event={event} router={router} />
-            ))}
+          {/* Loading or Events Grid */}
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <Spinner size="lg" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
+              {currentEvents.map((event) => (
+                <UserEventCard 
+                  key={event.id} 
+                  event={event}
+                  onCancelRegistration={handleCancelRegistration}
+                  />
+              ))}
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          <div className="flex justify-center mt-8">
+            <Pagination
+              showShadow
+              showControls
+              total={totalPages}
+              data-active-page={currentPage}
+              onChange={handlePageChange}
+            />
           </div>
 
-          {/*page control (pagination)*/}
-          <div className="flex justify-center mt-4">
-            {Array.from({ length: totalPages }, (_, index) => (
-              <Button
-                key={index + 1}
-                onClick={() => handlePageChange(index + 1)}
-                className={`mx-1 ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
-              >
-                {index + 1}
-              </Button>
-            ))}
-          </div>
         </div>
       </div>
       <Foot />

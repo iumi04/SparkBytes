@@ -346,6 +346,71 @@ def delete_event(event_id):
     except Exception as e:
         print("Error occurred:", e)
         return jsonify({"msg": "Internal Server Error", "error": str(e)}), 500
+    
+
+# This route is for users to cancel their registration for events
+@app.route("/cancel_registration/<event_id>", methods=["POST"])
+@jwt_required()
+def cancel_registration(event_id):
+    try:
+        data = request.get_json()
+        user_id = get_jwt_identity()
+
+        # Find the event
+        event = events_collection.find_one({"_id": ObjectId(event_id)})
+        if not event:
+            return jsonify({"msg": "Event not found"}), 404
+
+        # Check if user is actually signed up for this event
+        if user_id not in event.get("signed_up_by", []):
+            return jsonify({"msg": "You are not registered for this event"}), 400
+
+        # Remove user from the event's signed_up_by array
+        events_collection.update_one(
+            {"_id": ObjectId(event_id)},
+            {"$pull": {"signed_up_by": user_id}}
+        )
+
+        # Get user email for notification
+        user = loginInfo_collection.find_one({"_id": ObjectId(user_id)})
+        if user:
+            send_cancellation_email(user.get("email"), event)
+
+        return jsonify({"msg": "Registration cancelled successfully"}), 200
+
+    except Exception as e:
+        print("Error occurred:", str(e))
+        return jsonify({"msg": "Internal Server Error", "error": str(e)}), 500
+
+# This helper function is for sending cancellation emails
+def send_cancellation_email(user_email, event):
+    subject = f"Registration Cancelled: {event['title']}"
+    body = f"""
+    Hi there,
+
+    Your registration for the event "{event['title']}" has been cancelled.
+
+    Event Details:
+    - Date: {event['date']}
+    - Start Time: {event['startTime']}
+    - Location: {event['location']}
+
+    If you did not request this cancellation, please contact us immediately.
+
+    Best regards,
+    The SparkBytes Team
+    """
+
+    msg = MIMEMultipart()
+    msg["From"] = EMAIL_USERNAME
+    msg["To"] = user_email
+    msg["Subject"] = subject
+    msg.attach(MIMEText(body, "plain"))
+
+    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+        server.starttls()
+        server.login(EMAIL_USERNAME, EMAIL_PASSWORD)
+        server.sendmail(EMAIL_USERNAME, user_email, msg.as_string())
 
 # Function to send email notifications to users when they sign up for an event
 def send_email_notification(user_email, event):
