@@ -101,6 +101,8 @@ const ModifyEventModal: React.FC<ModifyEventModalProps> = ({ visible, onClose, e
         console.log("Modal onClose triggered");
         onClose();
       }}
+    aria-labelledby="modify-event-modal-title"
+    aria-describedby="modify-event-modal-description"
     shouldBlockScroll={false}
     >
       <ModalContent>
@@ -157,35 +159,36 @@ const ModifyEventModal: React.FC<ModifyEventModalProps> = ({ visible, onClose, e
                 onChange={handleInputChange}
               />
               <div onClick={(e) => e.stopPropagation()}>
-                    <Dropdown>
+                <Dropdown>
                     <DropdownTrigger>
-                        <Button 
+                    <Button 
                         variant="bordered" 
                         className="w-full justify-start"
-                        >
+                    >
                         {formData.area || "Select Area"}
-                        </Button>
+                    </Button>
                     </DropdownTrigger>
                     <DropdownMenu 
-                        aria-label="Area selection"
-                        disableAnimation={true}
-                        onAction={(key) => {
+                    aria-label="Area selection"
+                    disableAnimation={true}
+                    onAction={(key) => {
                         setFormData(prev => ({
-                            ...prev!,
-                            area: key.toString()
+                        ...prev!,
+                        area: key.toString(),
                         }));
-                        }}
+                    }}
                     >
-                        {areaOptions.map((location) => (
+                    {areaOptions.map((location) => (
                         <DropdownItem 
-                            key={location}
-                            className="text-black"
+                        key={location}
+                        className="text-black"
+                        onClick={(e) => e.stopPropagation()} // Prevents click from propagating
                         >
-                            {location}
+                        {location}
                         </DropdownItem>
-                        ))}
+                    ))}
                     </DropdownMenu>
-                    </Dropdown>
+                </Dropdown>
                 </div>
               <div>
                 {tagOptions.map((tag) => (

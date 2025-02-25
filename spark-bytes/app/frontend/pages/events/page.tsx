@@ -151,7 +151,7 @@ export default function Events() {
                   <div>
                     <p className="font-bold mb-2">Food Preferences</p>
                     <div className="space-y-2">
-                      {["Vegan", "Dairy Free", "Nut Free", "Gluten Free", "Seafood", "Meat"].map((preference) => (
+                      {["Vegan", "Dairy-Free", "Nut-Free", "Gluten-Free", "Seafood", "Meat"].map((preference) => (
                         <label className="block" key={preference}>
                           <input
                             type="checkbox"
