@@ -102,5 +102,5 @@ To get a copy of this project up and running on your local machine, follow these
 - **POST /signup_event**: Sign up for an event.
 - **GET /whoami**: Get the currently logged-in user's ID.
 
-## Presentation Link
+## Project Demonstration Slideshow
 https://docs.google.com/presentation/d/1dYpNqCnipBOjFqLVy8YWte6JNpwf7hpxiN01B59TsMw/edit#slide=id.p
